@@ -1,11 +1,13 @@
 import React from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
 import Card from '@material-ui/core/Card';
+import {useEffect, setState, useState} from 'react';
 import { green } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
-import CheckIcon from '@material-ui/icons/Check';
-import CloseIcon from '@material-ui/icons/Close';
-
+import DeleteIcon from '@material-ui/icons/Delete';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import { Input } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 
 const GreenCheckbox = withStyles({
   root: {
@@ -17,7 +19,7 @@ const GreenCheckbox = withStyles({
   checked: {},
 })((props) => <Checkbox color="default" {...props} />);
 
-export default function TulostaKysymykset1(props) {
+export default function MuokkaaKysymyksiä(props) {
   //Alustetaan data
   let data = props.kysymykset;
   let kyselyN = props.kyselyIndex;
@@ -26,18 +28,7 @@ export default function TulostaKysymykset1(props) {
 
   let palautettu = props.palautettu;
 
-  const vastaustenTarkistus = (index) =>{
-    
-    let pituus = data[kyselyN].kysely[index].vastaukset.length
-    let tarkistus = data[kyselyN].kysely[index].vastaukset
-    console.log(tarkistus)
-    for (var i = 0; i < pituus; i++){
-      if (tarkistus[i].oikea !== tarkistus[i].valittu){
-        return "väärin";
-      }
-    }
-    return "oikein";
-  }
+ 
 
   // const muutaVastauksia = (data) => {
   //   return (<div> {data.map((item, index) => <div key={index}>
@@ -67,38 +58,30 @@ export default function TulostaKysymykset1(props) {
 
   //Tulostetaan vaihtoehdot sen mukaan, onko vastaukset palautettu
   const näytäVaihtoehdot = (index) => {
-    
+    console.log(data.kysely)
     //Mikäli tuloksia ei ole palautettu, tulostetaan vain yksi checkbox
     if (palautettu === false){
       return data[props.kyselyIndex].kysely[index].vastaukset.map((alkio, vastausIndex) => 
       <div key={vastausIndex}>
-        <label><Checkbox disabled={palautettu === true}className="kysymys" key={alkio}
-        id={vastausIndex} checked={alkio.valittu} onChange={(e) => props.muutaVastaus(e, index, vastausIndex)}/>
-        {alkio.vastaus}</label>
+        <label><Button disabled={palautettu === true}className="kysymys" key={alkio}
+        id={vastausIndex}><DeleteIcon></DeleteIcon></Button>
+        
+        <Input value={alkio.vastaus}></Input></label>
 
         {/* {palautettu === true ? (<div><GreenCheckbox disabled className="vastaukset" checked={alkio.oikea}/>
         {alkio.vastaus}</div> : (<div></div>)} */}
-
-      </div>)
+        </div>)   
     }
-    //Mikäli vastaukset on palautettu, tulostetaan myös vastaukset GreenCheckBoxin avulla
-    return data[props.kyselyIndex].kysely[index].vastaukset.map((alkio, vastausIndex) => 
-      <div key={vastausIndex}>
-        <label><Checkbox disabled key={alkio + "" + vastausIndex} checked={alkio.valittu}
-        id={vastausIndex} onChange={(e) => props.muutaVastaus(e, index, vastausIndex)}/>
-
-        <GreenCheckbox disabled className="vastaukset" checked={alkio.oikea}/>
-        {alkio.vastaus}</label>
-      </div>)
-
-      
   }
   
-  return (<div>
-      {data.map((item, index) => <Card className="kortti" elevation={3}><div className="kysymys">
-      {data[kyselyN].kysely[index].kysymys}{console.log(data)}{palautettu ? <div>{vastaustenTarkistus(index)}</div> : null}</div> {näytäVaihtoehdot(index)}
+  return (
+    <div>
+      {data.map((item, index) => <Card className="kortti" elevation={3}><input className="kysymys" value={data[kyselyN].kysely[index].kysymys}>
+      </input> {näytäVaihtoehdot(index)}
       </Card>)}
-      
+      <div>
+        "MUOKKAUSOSIO""MUOKKAUSOSIO""MUOKKAUSOSIO""MUOKKAUSOSIO"
+      </div>
     </div>
-  );
+  )
 }

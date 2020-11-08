@@ -1,5 +1,5 @@
-
 import React from 'react';
+import Fade from 'react-reveal/Fade';
 import {useEffect, useState} from 'react';
 import './App.css';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -9,9 +9,12 @@ import { green } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Card from '@material-ui/core/Card';
 import koira from './koira.png';
 import TulostaKysymykset1 from './TulostaKysymykset1';
+import Collapse from '@material-ui/core/Collapse';
+import Slide from '@material-ui/core/Slide';
+import MuokkaaKysymyksiä from './MuokkaaKysymyksiä';
+
 
 function App() {
 
@@ -19,24 +22,24 @@ function App() {
   const [dataAlustettu, setDataAlustettu] = useState(false)
   const [palautettu, setPalautettu] = useState(false)
   const [kyselyValinta, setKyselyValinta] = useState(0)
+  const [näkymä, setNäkymä] = useState(1)
+  const [väliaika, setVäliaika]= useState([])
 
   //Latausnäkymää varten muuttuja ja useEffect
-  const [loading, setLoading] = useState(true)
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 3000)
-  }, [])
+
 
 
   //Ensimmäisen kyselyn kysymykset
   const kyselyt = [
-    {kysely: [
+    {nimi: "Numerovisa", kysely: [
         {kysymys: "Kuinka monta ihmistä on käynyt kuussa?", vastaukset: [
         {vastaus: "0", valittu: false, oikea: false}, 
         {vastaus: "12", valittu: false, oikea: true}, 
         {vastaus: "15", valittu: false, oikea: false}
         ]},
-      {kysymys: "Kuinka monta sanaa on Potter-kirjasarjan suomennoksissa yhteensä?", vastaukset: [
+      {kysymys: "Kuinka monta sanaa Potter-kirjasarjan suomennoksissa on yhteensä?", vastaukset: [
         {vastaus: "857 911", valittu: false, oikea: true}, 
+        {vastaus: "955 543", valittu: false, oikea: false}, 
         {vastaus: "1 100 438", valittu: false, oikea: false}, 
         {vastaus: "1 204 539", valittu: false, oikea: false}
         ]},
@@ -45,30 +48,46 @@ function App() {
         {vastaus: "5,6 miljoonaa", valittu: false, oikea: false}, 
         {vastaus: "5,8 miljoonaa", valittu: false, oikea: true}
         ]}]},
-    {kysely: [
+    {nimi: "Kirjainvisa", kysely: [
       {
-        kysymys: "testitesti?", vastaukset: [
-          {vastaus: "0", valittu: false, oikea: false}, 
-          {vastaus: "12", valittu: false, oikea: true}, 
-          {vastaus: "15", valittu: false, oikea: false}
+        kysymys: "Mikä YMCA on suomeksi?", vastaukset: [
+          {vastaus: "YMKY", valittu: false, oikea: false}, 
+          {vastaus: "NMKY", valittu: false, oikea: true}, 
+          {vastaus: "MNKY", valittu: false, oikea: false}
         ]},
-        {kysymys: "Mikä on oikein?", vastaukset: [
-          {vastaus: "857 911", valittu: false, oikea: true}, 
-          {vastaus: "1 100 438", valittu: false, oikea: false}, 
-          {vastaus: "1 204 539", valittu: false, oikea: false}
+        {kysymys: "Mikä seuraavista on GIF?", vastaukset: [
+          {vastaus: "graph iteration format", valittu: false, oikea: false}, 
+          {vastaus: "graphics interchange format", valittu: false, oikea: true}, 
+          {vastaus: "george iliott format ", valittu: false, oikea: false}
         ]},
-        {kysymys: "Mikä seuraavista luvuista on lähinnä Tanskan asukasmäärää?", vastaukset: [
-          {vastaus: "5,2 miljoonaa", valittu: false, oikea: false}, 
-          {vastaus: "5,6 miljoonaa", valittu: false, oikea: false}, 
-          {vastaus: "5,8 miljoonaa", valittu: false, oikea: true}
-        ]}]}
+        {kysymys: "Kuka on oikea Ben?", vastaukset: [
+          {vastaus: "Ben Zysgowicz", valittu: false, oikea: false}, 
+          {vastaus: "Ben Zyscowicz", valittu: false, oikea: true}, 
+          {vastaus: "Ben Zyskowicz", valittu: false, oikea: false},
+          {vastaus: "Ben Zysćowicz", valittu: false, oikea: false}
+        ]}]},
+      {nimi: "Merkkivisa", kysely: [
+          {
+            kysymys: "Mikä seuraavista shakkipelin merkinnöistä tarkoittaa 'arveluttava siirto, mutta ei suoraan osoitettavissa virheeksi'?", vastaukset: [
+              {vastaus: "?", valittu: false, oikea: false}, 
+              {vastaus: "??", valittu: false, oikea: false}, 
+              {vastaus: "?!", valittu: false, oikea: true},
+              {vastaus: "!?", valittu: false, oikea: false}
+            ]},
+            {kysymys: "Mikä ‽ on englanninkieliseltä nimeltään", vastaukset: [
+              {vastaus: "Interrobang", valittu: false, oikea: true}, 
+              {vastaus: "Sulivabang", valittu: false, oikea: false}, 
+              {vastaus: "Guessbang", valittu: false, oikea: false}
+            ]},
+            {kysymys: "Mitä matemaattinen merkki ∂ tarkoittaa?", vastaukset: [
+              {vastaus: "tyhjä joukko", valittu: false, oikea: false}, 
+              {vastaus: "normaali aliryhmä", valittu: false, oikea: true}, 
+              {vastaus: "Gradientti", valittu: false, oikea: false},
+              {vastaus: "Osittaisderivaatta", valittu: false, oikea: false}
+            ]}]}
       ]
     
-  
-
-
-
-  //Localstoragen data-avaimena on "data"
+ 
 
   // localSotragen data-avaimena on "data"
   useEffect(() => {
@@ -84,52 +103,46 @@ function App() {
   },
     [Button, setKyselyValinta])
 
+
+  // Datan alustuksen tarkistus
   useEffect(() => {
     if (dataAlustettu) {
       window.localStorage.setItem("data", JSON.stringify(data))
     }
   }, [data])
 
-  const testi = () =>{
-    return null;
-  }
+  // const testi = () =>{
+  //   return null;
+  // }
 
-  const näytäVaihtoehdot = (index) => {
-    if (palautettu == false){
-      return data.kysely[0][index].vastaukset.map((alkio, vastausIndex) => 
-      <div key={vastausIndex}>
+  // const näytäVaihtoehdot = (index) => {
+  //   setLoading = true;
+  //   if (palautettu == false){
+  //     return data.kysely[0][index].vastaukset.map((alkio, vastausIndex) => 
+  //     <div key={vastausIndex}>
 
-        <label><Checkbox className="kysymys" key={alkio}
-        id={vastausIndex} checked={alkio.valittu} onChange={(e) => vastausValittu(e, index, vastausIndex)}/>
-        {alkio.vastaus}</label>
-      </div>)
-    }
-    return data.kysely[0][index].vastaukset.map((alkio, vastausIndex) => 
-      <div key={vastausIndex}>
-        <label><Checkbox disabled key={alkio} checked={alkio.valittu}
-        id={vastausIndex} onChange={(e) => vastausValittu(e, index, vastausIndex)}/>
+  //       <label><Checkbox className="kysymys" key={alkio}
+  //       id={vastausIndex} checked={alkio.valittu} onChange={(e) => vastausValittu(e, index, vastausIndex)}/>
+  //       {alkio.vastaus}</label>
+  //     </div>)
+  //   }
+  //   return data.kysely[0][index].vastaukset.map((alkio, vastausIndex) => 
+  //     <div key={vastausIndex}>
+  //       <label><Checkbox disabled key={alkio} checked={alkio.valittu}
+  //       id={vastausIndex} onChange={(e) => vastausValittu(e, index, vastausIndex)}/>
 
-        <GreenCheckbox disabled className="vastaukset" checked={alkio.oikea}/>
-        {alkio.vastaus}</label>
-      </div>)
-  }
+  //       <GreenCheckbox disabled className="vastaukset" checked={alkio.oikea}/>
+  //       {alkio.vastaus}</label>
+  //     </div>)
+  // }
 
-  
+  //Asetetaan valitun checkboxin tilan (event) mukaan käyttäjän vastaus indeksien avulla
   const vastausValittu = (event, kysymysI, vastausI) => {
     let syväKopio = JSON.parse(JSON.stringify(data))
-
-    //syväKopio[vanhemmanIndex].jälkikasvu[lapsenIndex].lapsenNimi=event.target.value
     syväKopio[kyselyValinta].kysely[kysymysI].vastaukset[vastausI].valittu = event.target.checked
     setData(syväKopio)
 
     return null;
-  }
-
-  function TulostaKysymykset(props) {
-    console.log(props.kysymykset)
-    return props.kysymykset.map((item, index) => <Card className="kortti" elevation={3}>
-          {item.kysymys} {näytäVaihtoehdot(index)}
-        </Card>)
   }
 
   //Oikeita vastauksia varten oma vihreä painike
@@ -159,8 +172,27 @@ function App() {
     }
   }));
 
-  
   const classes = useStyles();
+
+
+  //Latausnäkymätestailua
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 1500)
+  }, [])
+
+  const nowLoading = () => {
+    setLoading(true)
+    setTimeout(() => setLoading(false), 1500)
+  }
+
+  const haluttuKysely = () =>{
+    setVäliaika(data[kyselyValinta])
+  }
+
+  
+
   
   
 
@@ -173,6 +205,8 @@ function App() {
         <Toolbar>
           <Button color="inherit" edge="start" className={classes.menuButton}>TENTIT</Button>
           <Button color="inherit">TIETOA SOVELLUKSESTA</Button>
+          <Button variant="contained" color="secondary" onClick={() => setNäkymä(1)}>Näytä kysely</Button>
+          <Button variant="contained" color="secondary" onClick={() => setNäkymä(2)}>Näytä kyselyn muokkaus</Button>
           <div className={classes.spacer}></div>
           <Button color="inherit">POISTU</Button>
         </Toolbar>
@@ -183,24 +217,18 @@ function App() {
 
       <div className="kysymysosio">
         {/*Painikkeet kyselyn valintaa varten*/}
-        <Button variant={"contained"} onChange={() => setKyselyValinta(0)}>Numerovisa</Button>
-        <Button variant={"contained"} onChange={() => setKyselyValinta(1)}>Kirjainvisa</Button>
+        
+        {data.map((arvo, index) => <Button variant={"contained"} onClick={() => {setKyselyValinta(index); setPalautettu(false); nowLoading();}}>{arvo.nimi}</Button>)}
         <br/>
         <br/>
-        {/*Tulostetaan ensin kysymys ja kutsutaan sitten näytäVaihtoehdot
-         */}
-         {/*
-        {kysely1.map((item, index) => <Card className="kortti" elevation={3}>
-          {item.kysymys} {näytäVaihtoehdot(index)}
-        </Card>)}
-        */}
-        {loading === false ? (<div>
-        <TulostaKysymykset1 muutaVastaus={vastausValittu} kysymykset={data} palautettu= {palautettu} kyselyN={kyselyValinta}></TulostaKysymykset1>
+        {näkymä === 1 ? <div>
+          <Fade right><TulostaKysymykset1 muutaVastaus={vastausValittu} kysymykset={data} kyselyIndex={kyselyValinta}palautettu= {palautettu}></TulostaKysymykset1></Fade>
         <br/>
-        <Button variant={"contained"} color="primary" onClick={setPalautettu}>Näytä vastaukset</Button>
-        </div>) : (
-          <img src={koira} className="App-logo" alt="logo" />
-        )}
+        <Button variant={"contained"} color="primary" onClick={() => {setPalautettu(true); nowLoading();}}>Näytä vastaukset</Button>
+        </div> : 
+          <Fade right><MuokkaaKysymyksiä muutaVastaus={vastausValittu} kysymykset={data} kyselyIndex={kyselyValinta} palautettu= {palautettu}></MuokkaaKysymyksiä></Fade>
+        }
+        
         </div>
     </div>
   );

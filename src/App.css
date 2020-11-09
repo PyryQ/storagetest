@@ -16,8 +16,21 @@
 
 .kysymys{
   margin-left: 20px;
-  margin-right: 3px;
 }
+
+.kysymysM{
+  margin-left: 20px;
+  width: 80%;
+}
+
+.lisääM {
+  position: left;
+}
+
+.vastausM{
+  width: 60%;
+}
+
 
 
 

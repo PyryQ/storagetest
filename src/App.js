@@ -29,7 +29,7 @@ function App() {
 
 
 
-  //Ensimmäisen kyselyn kysymykset
+  //Alkuperäinen taulukko kyselyistä ja niiden vastauksista
   const kyselyt = [
     {nimi: "Numerovisa", kysely: [
         {kysymys: "Kuinka monta ihmistä on käynyt kuussa?", vastaukset: [
@@ -111,37 +111,11 @@ function App() {
     }
   }, [data])
 
-  // const testi = () =>{
-  //   return null;
-  // }
-
-  // const näytäVaihtoehdot = (index) => {
-  //   setLoading = true;
-  //   if (palautettu == false){
-  //     return data.kysely[0][index].vastaukset.map((alkio, vastausIndex) => 
-  //     <div key={vastausIndex}>
-
-  //       <label><Checkbox className="kysymys" key={alkio}
-  //       id={vastausIndex} checked={alkio.valittu} onChange={(e) => vastausValittu(e, index, vastausIndex)}/>
-  //       {alkio.vastaus}</label>
-  //     </div>)
-  //   }
-  //   return data.kysely[0][index].vastaukset.map((alkio, vastausIndex) => 
-  //     <div key={vastausIndex}>
-  //       <label><Checkbox disabled key={alkio} checked={alkio.valittu}
-  //       id={vastausIndex} onChange={(e) => vastausValittu(e, index, vastausIndex)}/>
-
-  //       <GreenCheckbox disabled className="vastaukset" checked={alkio.oikea}/>
-  //       {alkio.vastaus}</label>
-  //     </div>)
-  // }
-
   //Asetetaan valitun checkboxin tilan (event) mukaan käyttäjän vastaus indeksien avulla
   const vastausValittu = (event, kysymysI, vastausI) => {
     let syväKopio = JSON.parse(JSON.stringify(data))
     syväKopio[kyselyValinta].kysely[kysymysI].vastaukset[vastausI].valittu = event.target.checked
     setData(syväKopio)
-
     return null;
   }
 
@@ -191,6 +165,29 @@ function App() {
     setVäliaika(data[kyselyValinta])
   }
 
+
+  //////////////////////////Funktiot listan muokkaamista varten
+  const muokkaaVastausta = (event, kysymysI, vastausI) => {
+    let syväKopio = JSON.parse(JSON.stringify(data))
+    syväKopio[kyselyValinta].kysely[kysymysI].vastaukset[vastausI].vastaus = event.target.value
+    setData(syväKopio)
+  }
+
+  const muutaOikeaVastaus = (event, kysymysI, vastausI) => {
+    let syväKopio = JSON.parse(JSON.stringify(data))
+    syväKopio[kyselyValinta].kysely[kysymysI].vastaukset[vastausI].oikea = event.target.value
+    setData(syväKopio)
+
+  }
+
+  const muokkaaKysymystä = (event, kysymysI) => {
+    let syväKopio = JSON.parse(JSON.stringify(data))
+    syväKopio[kyselyValinta].kysely[kysymysI].kysymys = event.target.value
+    setData(syväKopio)
+  }
+
+  
+
   
 
   
@@ -226,8 +223,16 @@ function App() {
         <br/>
         <Button variant={"contained"} color="primary" onClick={() => {setPalautettu(true); nowLoading();}}>Näytä vastaukset</Button>
         </div> : 
-          <Fade right><MuokkaaKysymyksiä muutaVastaus={vastausValittu} kysymykset={data} kyselyIndex={kyselyValinta} palautettu= {palautettu}></MuokkaaKysymyksiä></Fade>
+          <Fade right><MuokkaaKysymyksiä 
+            muutaVastaus={vastausValittu} 
+            kysymykset={data} 
+            kyselyIndex={kyselyValinta}
+            muokkaaVastausta={muokkaaVastausta}
+            muutaOikeaVastaus={muutaOikeaVastaus}
+            muokkaaKysymystä={muokkaaKysymystä}>
+          </MuokkaaKysymyksiä></Fade>
         }
+
         
         </div>
     </div>

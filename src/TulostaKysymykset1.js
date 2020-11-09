@@ -39,31 +39,6 @@ export default function TulostaKysymykset1(props) {
     return "oikein";
   }
 
-  // const muutaVastauksia = (data) => {
-  //   return (<div> {data.map((item, index) => <div key={index}>
-  //     <input onChange={(e) => vastausMuuttui(e, index)} 
-  //       value={item.vastaus}>
-  //     </input>
-  //     <input onChange={(e) => valintaMuuttui(e, index)}>
-  //       value={item.valittu}</input>
-  //     <input onChange={(e) => oikeaVastausMuuttui(e, index)}
-  //       value={item.oikea}>
-  //     </input>
-  //     </div>)}
-      
-  //     </div>)
-  // }
-
-  // const lisääKysymyksiä = () => {
-  //   let syväKopio = JSON.parse(JSON.stringify(data));
-  //   let uusiKysymys = {kysymys: "", valittu: false, oikea: false}
-  //   syväKopio.push(uusiKysymys)
-  //   setData(syväkopio)
-  // }
-
-  // const poistaKysymyksiä = () => {
-
-  // }
 
   //Tulostetaan vaihtoehdot sen mukaan, onko vastaukset palautettu
   const näytäVaihtoehdot = (index) => {
@@ -72,15 +47,13 @@ export default function TulostaKysymykset1(props) {
     if (palautettu === false){
       return data[props.kyselyIndex].kysely[index].vastaukset.map((alkio, vastausIndex) => 
       <div key={vastausIndex}>
-        <label><Checkbox disabled={palautettu === true}className="kysymys" key={alkio}
+        <label><Checkbox disabled={palautettu === true} className="kysymys" key={alkio}
         id={vastausIndex} checked={alkio.valittu} onChange={(e) => props.muutaVastaus(e, index, vastausIndex)}/>
         {alkio.vastaus}</label>
 
-        {/* {palautettu === true ? (<div><GreenCheckbox disabled className="vastaukset" checked={alkio.oikea}/>
-        {alkio.vastaus}</div> : (<div></div>)} */}
-
       </div>)
     }
+
     //Mikäli vastaukset on palautettu, tulostetaan myös vastaukset GreenCheckBoxin avulla
     return data[props.kyselyIndex].kysely[index].vastaukset.map((alkio, vastausIndex) => 
       <div key={vastausIndex}>
@@ -96,7 +69,7 @@ export default function TulostaKysymykset1(props) {
   
   return (<div>
       {data.map((item, index) => <Card className="kortti" elevation={3}><div className="kysymys">
-      {data[kyselyN].kysely[index].kysymys}{console.log(data)}{palautettu ? <div>{vastaustenTarkistus(index)}</div> : null}</div> {näytäVaihtoehdot(index)}
+      {data[kyselyN].kysely[index].kysymys}{palautettu ? <div>{vastaustenTarkistus(index)}</div> : null}</div> {näytäVaihtoehdot(index)}
       </Card>)}
       
     </div>

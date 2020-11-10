@@ -2,28 +2,23 @@ import React from 'react';
 import Fade from 'react-reveal/Fade';
 import {useEffect, useState} from 'react';
 import './App.css';
-import Checkbox from '@material-ui/core/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import { green } from '@material-ui/core/colors';
-import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import koira from './koira.png';
 import TulostaKysymykset1 from './TulostaKysymykset1';
-import Collapse from '@material-ui/core/Collapse';
-import Slide from '@material-ui/core/Slide';
+import TulostaKysymyksetUusi from './TulostaKysymyksetUusi';
 import MuokkaaKysymyksiä from './MuokkaaKysymyksiä';
 
 
 function App() {
 
   const [data, setData]=useState([])
+  const [testiData, setTestiData]=useState([])
   const [dataAlustettu, setDataAlustettu] = useState(false)
   const [palautettu, setPalautettu] = useState(false)
   const [kyselyValinta, setKyselyValinta] = useState(0)
   const [näkymä, setNäkymä] = useState(1)
-  const [väliaika, setVäliaika]= useState([])
 
   //Latausnäkymää varten muuttuja ja useEffect
 
@@ -32,7 +27,7 @@ function App() {
   //Alkuperäinen taulukko kyselyistä ja niiden vastauksista
   const kyselyt = [
     {nimi: "Numerovisa", kysely: [
-        {kysymys: "Kuinka monta ihmistä on käynyt kuussa?", vastaukset: [
+      {kysymys: "Kuinka monta ihmistä on käynyt kuussa?", vastaukset: [
         {vastaus: "0", valittu: false, oikea: false}, 
         {vastaus: "12", valittu: false, oikea: true}, 
         {vastaus: "15", valittu: false, oikea: false}
@@ -74,7 +69,7 @@ function App() {
               {vastaus: "?!", valittu: false, oikea: true},
               {vastaus: "!?", valittu: false, oikea: false}
             ]},
-            {kysymys: "Mikä ‽ on englanninkieliseltä nimeltään", vastaukset: [
+            {kysymys: "Mikä ‽ on englanninkieliseltä nimeltään?", vastaukset: [
               {vastaus: "Interrobang", valittu: false, oikea: true}, 
               {vastaus: "Sulivabang", valittu: false, oikea: false}, 
               {vastaus: "Guessbang", valittu: false, oikea: false}
@@ -93,15 +88,13 @@ function App() {
   useEffect(() => {
     let jemma = window.localStorage;
     let tempData = JSON.parse(jemma.getItem("data"))
-    if (tempData === null) {
+    if (tempData == null) {
       jemma.setItem("data", JSON.stringify(kyselyt))
       tempData = kyselyt
-
     } 
     setData(tempData);
     setDataAlustettu(true)
-  },
-    [Button, setKyselyValinta])
+  },[])
 
 
   // Datan alustuksen tarkistus
@@ -120,15 +113,7 @@ function App() {
   }
 
   //Oikeita vastauksia varten oma vihreä painike
-  const GreenCheckbox = withStyles({
-    root: {
-      color: green[400],
-      '&$checked': {
-        color: green[600],
-      },
-    },
-    checked: {},
-  })((props) => <Checkbox color="default" {...props} />);
+
 
   //useStyles yläpalkin muotoilua varten
   const useStyles = makeStyles((theme) => ({
@@ -149,22 +134,17 @@ function App() {
   const classes = useStyles();
 
 
-  //Latausnäkymätestailua
+  ////////////Latausnäkymätestailua
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 1500)
+    setTimeout(() => setLoading(false), 500)
   }, [])
 
   const nowLoading = () => {
     setLoading(true)
-    setTimeout(() => setLoading(false), 1500)
+    setTimeout(() => setLoading(false), 500)
   }
-
-  const haluttuKysely = () =>{
-    setVäliaika(data[kyselyValinta])
-  }
-
 
   //////////////////////////Funktiot listan muokkaamista varten
   const muokkaaVastausta = (event, kysymysI, vastausI) => {
@@ -175,9 +155,21 @@ function App() {
 
   const muutaOikeaVastaus = (event, kysymysI, vastausI) => {
     let syväKopio = JSON.parse(JSON.stringify(data))
-    syväKopio[kyselyValinta].kysely[kysymysI].vastaukset[vastausI].oikea = event.target.value
+    syväKopio[kyselyValinta].kysely[kysymysI].vastaukset[vastausI].oikea = event.target.checked
     setData(syväKopio)
+  }
 
+  const poistaVastaus = (kysymysI, vastausI) => {
+    let syväKopio = JSON.parse(JSON.stringify(data))
+    syväKopio[kyselyValinta].kysely[kysymysI].vastaukset.splice(vastausI, 1)
+    setData(syväKopio)
+  }
+
+  const lisääVastaus = (kysymysI) => {
+    let syväKopio = JSON.parse(JSON.stringify(data))
+    let uusiVastaus = {vastaus: "", valittu: false, oikea: false}
+    syväKopio[kyselyValinta].kysely[kysymysI].vastaukset.push(uusiVastaus)
+    setData(syväKopio)
   }
 
   const muokkaaKysymystä = (event, kysymysI) => {
@@ -186,17 +178,44 @@ function App() {
     setData(syväKopio)
   }
 
-  
+  const lisääKysymys = () => {
+    let syväKopio = JSON.parse(JSON.stringify(data))
+    let uusiKysymys =  {kysymys: "", vastaukset: []}
+    syväKopio[kyselyValinta].kysely.push(uusiKysymys)
+    setData(syväKopio)
+  }
 
-  
+  const poistaKysymys = (kysymysI) => {
+    let syväKopio = JSON.parse(JSON.stringify(data))
+    syväKopio[kyselyValinta].kysely.splice(kysymysI, 1)
+    setData(syväKopio)
+  }
 
-  
-  
+  const lisääUusiTentti = () => {
+    let tenttiNimi = prompt("Anna uudelle tentille nimi:", "");
+    let syväKopio = JSON.parse(JSON.stringify(data))
+    let uusiKysely = {nimi: tenttiNimi, kysely: [
+      {kysymys: "", vastaukset: [{vastaus: "", valittu: false, oikea: false}]}]
+    }
+    syväKopio.push(uusiKysely)
+    setData(syväKopio)
+  }
 
+  const poistaTentti = () => {
+    let syväKopio = JSON.parse(JSON.stringify(data))
+    if(data.length > 1){
+      syväKopio.splice(kyselyValinta, 1)
+    setData(syväKopio)
+    }
+    else {
+      alert("Tenttejä on oltava vähintään yksi.")
+    }
+    setKyselyValinta(0)
+  }
+
+  console.log(data)
   return (
-
     <div>
-
       <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
@@ -214,26 +233,40 @@ function App() {
 
       <div className="kysymysosio">
         {/*Painikkeet kyselyn valintaa varten*/}
-        
         {data.map((arvo, index) => <Button variant={"contained"} onClick={() => {setKyselyValinta(index); setPalautettu(false); nowLoading();}}>{arvo.nimi}</Button>)}
         <br/>
         <br/>
-        {näkymä === 1 ? <div>
-          <Fade right><TulostaKysymykset1 muutaVastaus={vastausValittu} kysymykset={data} kyselyIndex={kyselyValinta}palautettu= {palautettu}></TulostaKysymykset1></Fade>
+        {console.log(data[0])}
+        {näkymä == 1 ? <div>
+          <Fade right><TulostaKysymykset1 
+            muutaVastaus={vastausValittu} 
+            kysymys={data} 
+            palautettu= {palautettu}
+            kyselyIndex= {kyselyValinta}>
+          </TulostaKysymykset1></Fade>
         <br/>
         <Button variant={"contained"} color="primary" onClick={() => {setPalautettu(true); nowLoading();}}>Näytä vastaukset</Button>
         </div> : 
           <Fade right><MuokkaaKysymyksiä 
-            muutaVastaus={vastausValittu} 
             kysymykset={data} 
             kyselyIndex={kyselyValinta}
             muokkaaVastausta={muokkaaVastausta}
             muutaOikeaVastaus={muutaOikeaVastaus}
-            muokkaaKysymystä={muokkaaKysymystä}>
+            muokkaaKysymystä={muokkaaKysymystä}
+            poistaVastaus={poistaVastaus}
+            poistaKysymys={poistaKysymys}
+            lisääVastaus={lisääVastaus}
+            lisääKysymys={lisääKysymys}
+            lisääUusiTentti={lisääUusiTentti}
+            poistaTentti={poistaTentti}>
           </MuokkaaKysymyksiä></Fade>
         }
-
-        
+        <Fade right><TulostaKysymyksetUusi 
+            muutaVastaus={vastausValittu} 
+            vainKysymys={data[kyselyValinta]} 
+            palautettu= {palautettu}
+            kyselyIndex= {kyselyValinta}>
+          </TulostaKysymyksetUusi></Fade>
         </div>
     </div>
   );

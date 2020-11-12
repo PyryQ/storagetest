@@ -157,7 +157,7 @@ function App() {
         setDataAlustettu(true)
       }
       catch(exception){
-        alert("Tietokannan alustaminen epäonnistui")
+        alert("Tietokannan alustaminen epäonnistui.")
       }
       // finally{
       //   setData(kyselytKopio)
@@ -222,10 +222,14 @@ function App() {
 
   //Asetetaan valitun checkboxin tilan (event) mukaan käyttäjän vastaus indeksien avulla
   const vastausValittu = (event, kysymysI, vastausI) => {
+    try{
     let syväKopio = JSON.parse(JSON.stringify(data))
     syväKopio[kyselyValinta].kysely[kysymysI].vastaukset[vastausI].valittu = event.target.checked
     setData(syväKopio)
     return null;
+    }catch{
+      alert("Vastausta ei onnistuttu valitsemaan.")
+    }
   }
 
   //Oikeita vastauksia varten oma vihreä painike

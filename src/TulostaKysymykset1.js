@@ -25,24 +25,24 @@ export default function TulostaKysymykset1(props) {
   let dataU = props.kysymys
   console.log(dataU[props.kyselyIndex])
 
-  
-  //Valitaan dataUsta oikea kysely käsiteltäväksi
-
   let palautettu = props.palautettu;
 
   const vastaustenTarkistus = (index) =>{
-    
-    let pituus = dataU[props.kyselyIndex].dataU[props.kyselyIndex].kysely.length
-    let tarkistus = dataU[props.kyselyIndex].kysely[index].vastaukset
-    console.log(tarkistus)
-    for (var i = 0; i < pituus; i++){
-      if (tarkistus[i].oikea !== tarkistus[i].valittu){
-        return (<CloseIcon/>);
+    try{
+      let pituus = dataU[props.kyselyIndex].dataU[props.kyselyIndex].kysely.length
+      let tarkistus = dataU[props.kyselyIndex].kysely[index].vastaukset
+      console.log(tarkistus)
+      for (var i = 0; i < pituus; i++){
+        if (tarkistus[i].oikea !== tarkistus[i].valittu){
+          return (<CloseIcon/>);
+        }
       }
+      return (<CheckIcon/>);
     }
-    return (<CheckIcon/>);
+    catch{
+      alert("Vastausten tarkistus epäonnistui")
+    }
   }
-
 
   //Tulostetaan vaihtoehdot sen mukaan, onko vastaukset palautettu
   const näytäVaihtoehdot = (indexK) => {
@@ -67,9 +67,8 @@ export default function TulostaKysymykset1(props) {
         <GreenCheckbox disabled className="vastaukset" checked={alkio.oikea}/>
         {alkio.vastaus}</label>
       </div>)
-
-      
   }
+
   return (<div className="tulostusosio">
       {dataU.map((item, index) => <Card className="kortti" elevation={3}><div className="kysymys">
       {props.kysymys[props.kyselyIndex].kysely[index].kysymys}{props.palautettu ? vastaustenTarkistus(index) : null}</div> {näytäVaihtoehdot(index)}

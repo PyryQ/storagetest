@@ -7,6 +7,10 @@ import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import {useEffect} from 'react';
 
+
+
+//TÄMÄ TIEDOSTO ON LUOTU KOPIOKSI
+
 //Luodaan GreenCheckBox oikeita vastauksia varten
 const GreenCheckbox = withStyles({
   root: {

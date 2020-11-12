@@ -29,6 +29,7 @@ export default function MuokkaaKysymyksiä(props) {
 
   const näytäVaihtoehdot = (indexK) => {
     //Mikäli tuloksia ei ole palautettu, tulostetaan vain yksi checkbox
+    try {
       return <div> {data[props.kyselyIndex].kysely[indexK].vastaukset.map((alkio, indexV) => 
       <div key={"vastaus"}>
         <label><Checkbox className="vastausCheckM" key= {"oikea" + props.kyselyIndex + "" + indexK + "" + indexV}
@@ -43,7 +44,11 @@ export default function MuokkaaKysymyksiä(props) {
         id={indexV} onClick={() => props.poistaVastaus(indexK, indexV)}><DeleteIcon></DeleteIcon></Button>
 
         </div>)}<Button className="lisääM" onClick={() => props.lisääVastaus(indexK)}><AddCircleOutlineIcon/></Button></div>
-  }
+    }
+    catch{
+      alert("Vastausvaihtoehtojen tulostus epäonnistui")
+    }
+}
   
   return (
     <div className="muokkausosio">

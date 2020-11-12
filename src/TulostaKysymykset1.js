@@ -21,20 +21,19 @@ const GreenCheckbox = withStyles({
 
 export default function TulostaKysymykset1(props) {
 
-  
-  let data = props.kysymys
-  //Alustetaan data
+  //Alustetaan dataU
+  let dataU = props.kysymys
+  console.log(dataU[props.kyselyIndex])
 
-  console.log(data)
   
-  //Valitaan datasta oikea kysely käsiteltäväksi
+  //Valitaan dataUsta oikea kysely käsiteltäväksi
 
   let palautettu = props.palautettu;
 
   const vastaustenTarkistus = (index) =>{
     
-    let pituus = data[props.kyselyIndex].kysely[index].vastaukset.length
-    let tarkistus = data[props.kyselyIndex].kysely[index].vastaukset
+    let pituus = dataU[props.kyselyIndex].dataU[props.kyselyIndex].kysely.length
+    let tarkistus = dataU[props.kyselyIndex].kysely[index].vastaukset
     console.log(tarkistus)
     for (var i = 0; i < pituus; i++){
       if (tarkistus[i].oikea !== tarkistus[i].valittu){
@@ -50,7 +49,7 @@ export default function TulostaKysymykset1(props) {
     
     //Mikäli tuloksia ei ole palautettu, tulostetaan vain yksi checkbox
     if (palautettu === false){
-      return data[props.kyselyIndex].kysely[indexK].vastaukset.map((alkio, vastausIndex) => 
+      return dataU[props.kyselyIndex].kysely[indexK].vastaukset.map((alkio, vastausIndex) => 
       <div key={vastausIndex}>
         <label><Checkbox disabled={palautettu === true} className="kysymys" key={alkio}
         id={vastausIndex} checked={alkio.valittu} onChange={(e) => props.muutaVastaus(e, indexK, vastausIndex)}/>
@@ -60,7 +59,7 @@ export default function TulostaKysymykset1(props) {
     }
 
     //Mikäli vastaukset on palautettu, tulostetaan myös vastaukset GreenCheckBoxin avulla
-    return data[props.kyselyIndex].kysely[indexK].vastaukset.map((alkio, vastausIndex) => 
+    return dataU[props.kyselyIndex].kysely[indexK].vastaukset.map((alkio, vastausIndex) => 
       <div key={vastausIndex}>
         <label><Checkbox disabled key={alkio + "" + vastausIndex} checked={alkio.valittu}
         id={vastausIndex} onChange={(e) => props.muutaVastaus(e, indexK, vastausIndex)}/>
@@ -71,11 +70,9 @@ export default function TulostaKysymykset1(props) {
 
       
   }
-
-  console.log(data)
-  return (<div>
-      {props.kysymys.map((item, index) => <Card className="kortti" elevation={3}><div className="kysymys">
-      {data[props.kyselyIndex].kysely[index].kysymys}{props.palautettu ? vastaustenTarkistus(index) : null}</div> {näytäVaihtoehdot(index)}
+  return (<div className="tulostusosio">
+      {dataU.map((item, index) => <Card className="kortti" elevation={3}><div className="kysymys">
+      {props.kysymys[props.kyselyIndex].kysely[index].kysymys}{props.palautettu ? vastaustenTarkistus(index) : null}</div> {näytäVaihtoehdot(index)}
       </Card>)}
     </div>
   );

@@ -64,7 +64,7 @@ export default function MuokkaaKysymyksiä(props) {
         </Card>)}
       <div>
         <Button className="lisääK" onClick={() => props.lisääKysymys()}>
-          <AddCircleOutlineIcon/></Button>
+          <DeleteIcon/></Button>
       </div>
     </div>
   )

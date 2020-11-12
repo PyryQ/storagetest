@@ -9,9 +9,14 @@ import Toolbar from '@material-ui/core/Toolbar';
 import TulostaKysymykset1 from './TulostaKysymykset1';
 import TulostaKysymyksetUusi from './TulostaKysymyksetUusi';
 import MuokkaaKysymyksiä from './MuokkaaKysymyksiä';
+import axios from 'axios';
+
 
 
 function App() {
+  require('react-dom');
+  window.React2 = require('react');
+  console.log(window.React1 === window.React2);
 
   const [data, setData]=useState([])
   const [testiData, setTestiData]=useState([])
@@ -62,25 +67,136 @@ function App() {
           {vastaus: "Ben Zysćowicz", valittu: false, oikea: false}
         ]}]},
       {nimi: "Merkkivisa", kysely: [
-          {
-            kysymys: "Mikä seuraavista shakkipelin merkinnöistä tarkoittaa 'arveluttava siirto, mutta ei suoraan osoitettavissa virheeksi'?", vastaukset: [
-              {vastaus: "?", valittu: false, oikea: false}, 
-              {vastaus: "??", valittu: false, oikea: false}, 
-              {vastaus: "?!", valittu: false, oikea: true},
-              {vastaus: "!?", valittu: false, oikea: false}
-            ]},
-            {kysymys: "Mikä ‽ on englanninkieliseltä nimeltään?", vastaukset: [
-              {vastaus: "Interrobang", valittu: false, oikea: true}, 
-              {vastaus: "Sulivabang", valittu: false, oikea: false}, 
-              {vastaus: "Guessbang", valittu: false, oikea: false}
-            ]},
-            {kysymys: "Mitä matemaattinen merkki ∂ tarkoittaa?", vastaukset: [
-              {vastaus: "tyhjä joukko", valittu: false, oikea: false}, 
-              {vastaus: "normaali aliryhmä", valittu: false, oikea: true}, 
-              {vastaus: "Gradientti", valittu: false, oikea: false},
-              {vastaus: "Osittaisderivaatta", valittu: false, oikea: false}
-            ]}]}
+        {
+          kysymys: "Mikä seuraavista shakkipelin merkinnöistä tarkoittaa 'arveluttava siirto, mutta ei suoraan osoitettavissa virheeksi'?", vastaukset: [
+            {vastaus: "?", valittu: false, oikea: false}, 
+            {vastaus: "??", valittu: false, oikea: false}, 
+            {vastaus: "?!", valittu: false, oikea: true},
+            {vastaus: "!?", valittu: false, oikea: false}
+           ]},
+          {kysymys: "Mikä ‽ on englanninkieliseltä nimeltään?", vastaukset: [
+            {vastaus: "Interrobang", valittu: false, oikea: true}, 
+            {vastaus: "Sulivabang", valittu: false, oikea: false}, 
+            {vastaus: "Guessbang", valittu: false, oikea: false}
+          ]},
+          {kysymys: "Mitä matemaattinen merkki ∂ tarkoittaa?", vastaukset: [
+            {vastaus: "Tyhjä joukko", valittu: false, oikea: false}, 
+            {vastaus: "Normaali aliryhmä", valittu: false, oikea: true}, 
+            {vastaus: "Gradientti", valittu: false, oikea: false},
+            {vastaus: "Osittaisderivaatta", valittu: false, oikea: false}
+          ]}]}
       ]
+
+      //data serverin datan muodostamista varten
+      const kyselytKopio = 
+        {nimi: "Numerovisa", kysely: [
+          {kysymys: "Kuinka monta ihmistä on käynyt kuussa?", vastaukset: [
+            {vastaus: "0", valittu: false, oikea: false}, 
+            {vastaus: "12", valittu: false, oikea: true}, 
+            {vastaus: "15", valittu: false, oikea: false}
+            ]},
+          {kysymys: "Kuinka monta sanaa Potter-kirjasarjan suomennoksissa on yhteensä?", vastaukset: [
+            {vastaus: "857 911", valittu: false, oikea: true}, 
+            {vastaus: "955 543", valittu: false, oikea: false}, 
+            {vastaus: "1 100 438", valittu: false, oikea: false}, 
+            {vastaus: "1 204 539", valittu: false, oikea: false}
+            ]},
+          {kysymys: "Mikä seuraavista luvuista on lähinnä Tanskan asukasmäärää?", vastaukset: [
+            {vastaus: "5,2 miljoonaa", valittu: false, oikea: false}, 
+            {vastaus: "5,6 miljoonaa", valittu: false, oikea: false}, 
+            {vastaus: "5,8 miljoonaa", valittu: false, oikea: true}
+            ]}],
+        nimi: "Kirjainvisa", kysely: [
+          {
+            kysymys: "Mikä YMCA on suomeksi?", vastaukset: [
+              {vastaus: "YMKY", valittu: false, oikea: false}, 
+              {vastaus: "NMKY", valittu: false, oikea: true}, 
+              {vastaus: "MNKY", valittu: false, oikea: false}
+            ]},
+            {kysymys: "Mikä seuraavista on GIF?", vastaukset: [
+              {vastaus: "graph iteration format", valittu: false, oikea: false}, 
+              {vastaus: "graphics interchange format", valittu: false, oikea: true}, 
+              {vastaus: "george iliott format ", valittu: false, oikea: false}
+            ]},
+            {kysymys: "Kuka on oikea Ben?", vastaukset: [
+              {vastaus: "Ben Zysgowicz", valittu: false, oikea: false}, 
+              {vastaus: "Ben Zyscowicz", valittu: false, oikea: true}, 
+              {vastaus: "Ben Zyskowicz", valittu: false, oikea: false},
+              {vastaus: "Ben Zysćowicz", valittu: false, oikea: false}
+            ]}],
+          nimi: "Merkkivisa", kysely: [
+            {
+              kysymys: "Mikä seuraavista shakkipelin merkinnöistä tarkoittaa 'arveluttava siirto, mutta ei suoraan osoitettavissa virheeksi'?", vastaukset: [
+                {vastaus: "?", valittu: false, oikea: false}, 
+                {vastaus: "??", valittu: false, oikea: false}, 
+                {vastaus: "?!", valittu: false, oikea: true},
+                {vastaus: "!?", valittu: false, oikea: false}
+               ]},
+              {kysymys: "Mikä ‽ on englanninkieliseltä nimeltään?", vastaukset: [
+                {vastaus: "Interrobang", valittu: false, oikea: true}, 
+                {vastaus: "Sulivabang", valittu: false, oikea: false}, 
+                {vastaus: "Guessbang", valittu: false, oikea: false}
+              ]},
+              {kysymys: "Mitä matemaattinen merkki ∂ tarkoittaa?", vastaukset: [
+                {vastaus: "Tyhjä joukko", valittu: false, oikea: false}, 
+                {vastaus: "Normaali aliryhmä", valittu: false, oikea: true}, 
+                {vastaus: "Gradientti", valittu: false, oikea: false},
+                {vastaus: "Osittaisderivaatta", valittu: false, oikea: false}
+              ]}]
+            }
+          
+
+  useEffect(()=>{
+    ////////////////////////////POST
+    const createData = async () => {
+      try{
+      kyselytKopio.forEach(async item=>{
+        let result = await axios.post("http://localhost:3003/kyselyt", item)
+      })
+        setData(kyselytKopio)
+        setDataAlustettu(true)
+      }
+      catch(exception){
+        alert("Tietokannan alustaminen epäonnistui")
+      }
+      // finally{
+      //   setData(kyselytKopio)
+      //   setDataAlustettu(true)
+      // }
+    }
+    /////////////////////////////GET
+    const fetchData = async () => {
+      try{
+        let result = await axios.get("http://localhost:3003/kyselyt")
+        if (result.data.lenght > 0){
+          setData(result.data)
+          setDataAlustettu(true)
+        }else{
+          throw("Data tulee alustaa") 
+        }
+      }
+      catch(exception){
+        createData();
+        console.log(exception)
+      }
+    }
+    fetchData();
+  },[])
+
+  ////////////////////////////////PUT
+  useEffect(() => {
+    const updateData = async () => {
+      try{
+        let result = await axios.put("http://localhost:3003/kyselyt", data)
+      }
+      catch(exception){
+        console.log("Dataa ei onnistuttu päivittämään.")
+      }
+    }
+    if(dataAlustettu){
+      updateData();
+    }
+  },[data])
     
  
 
@@ -131,7 +247,9 @@ function App() {
     }
   }));
 
-  const classes = useStyles();
+  const classes1 = useStyles();
+
+  
 
 
   ////////////Latausnäkymätestailua
@@ -213,17 +331,27 @@ function App() {
     setKyselyValinta(0)
   }
 
+
+  //muistiinpanoja: dev.huuto.net, postman rest client
+
+  //FORM DIALOGE
+
+  // npm cache clean --force
+  // delete node_modules folder
+  // delete package-lock.json file
+  // npm install
+  
   console.log(data)
   return (
     <div>
-      <div className={classes.root}>
+      <div className={classes1.root}>
       <AppBar position="static">
         <Toolbar>
-          <Button color="inherit" edge="start" className={classes.menuButton}>TENTIT</Button>
+          <Button color="inherit" edge="start" className={classes1.menuButton}>TENTIT</Button>
           <Button color="inherit">TIETOA SOVELLUKSESTA</Button>
           <Button variant="contained" color="secondary" onClick={() => setNäkymä(1)}>Näytä kysely</Button>
           <Button variant="contained" color="secondary" onClick={() => setNäkymä(2)}>Näytä kyselyn muokkaus</Button>
-          <div className={classes.spacer}></div>
+          <div className={classes1.spacer}></div>
           <Button color="inherit">POISTU</Button>
         </Toolbar>
       </AppBar>
@@ -261,13 +389,18 @@ function App() {
             poistaTentti={poistaTentti}>
           </MuokkaaKysymyksiä></Fade>
         }
-        <Fade right><TulostaKysymyksetUusi 
+
+        
+        {/* <Fade right><TulostaKysymyksetUusi 
             muutaVastaus={vastausValittu} 
             vainKysymys={data[kyselyValinta]} 
             palautettu= {palautettu}
             kyselyIndex= {kyselyValinta}>
-          </TulostaKysymyksetUusi></Fade>
+          </TulostaKysymyksetUusi></Fade> */}
+          <br></br>
+          <Button variant={"contained"} color="primary">Tyhjää muisti</Button>
         </div>
+        
     </div>
   );
 }

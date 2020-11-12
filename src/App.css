@@ -29,6 +29,7 @@
 
 .vastausM{
   width: 60%;
+  min-width: 50px;
 }
 
 .lisääK{

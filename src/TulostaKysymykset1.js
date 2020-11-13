@@ -1,12 +1,10 @@
 import React from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
 import Card from '@material-ui/core/Card';
-import {useState} from 'react';
 import { green } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
-import {useEffect} from 'react';
 
 //Luodaan GreenCheckBox oikeita vastauksia varten
 const GreenCheckbox = withStyles({

@@ -272,7 +272,7 @@ function App() {
 
   ///////////////////////////REDUCER
   function reducer(state, action) { //data tai state
-    console.log(state)
+    console.log(state[0])
     let syväKopio = JSON.parse(JSON.stringify(state)) //data vai state?
     console.log(syväKopio[0])
     switch (action.type) {
@@ -396,6 +396,7 @@ function App() {
   console.log(data2) 
   console.log("state") 
   console.log(state)
+  console.log(data2[tenttiValinta])
   return (
     <div>
       <div className={classes1.root}>
@@ -418,11 +419,12 @@ function App() {
         {data.map((arvo, index) => <Button variant={"contained"} onClick={() => {settenttiValinta(index); setPalautettu(false); nowLoading();}}>{arvo.nimi}</Button>)}
         <br/>
         <br/>
-        {näkymä == 1 ? <div>
+        {data[tenttiValinta] != undefined ? (
+        näkymä == 1 ? <div>
           <Fade right><TulostaKysymykset1 
             dispatch={dispatch}
             muutaVastaus={vastausValittu} 
-            kysymys={data} 
+            kysymys={data[tenttiValinta]} 
             palautettu= {palautettu}
             kyselyIndex= {tenttiValinta}>
           </TulostaKysymykset1></Fade>
@@ -431,7 +433,7 @@ function App() {
         </div> : 
           <Fade right><MuokkaaKysymyksiä 
             dispatch={dispatch}
-            kysymykset={data} 
+            kysymys={data[tenttiValinta]} 
             kyselyIndex={tenttiValinta}
             muokkaaVastausta={muokkaaVastausta}
             muutaOikeaVastaus={muutaOikeaVastaus}
@@ -443,6 +445,7 @@ function App() {
             lisääUusiTentti={lisääUusiTentti}
             poistaTentti={poistaTentti}>
           </MuokkaaKysymyksiä></Fade>
+        ) : null
         }
 
         

@@ -23,14 +23,14 @@ const GreenCheckbox = withStyles({
 export default function MuokkaaKysymyksiä(props) {
 
   //Alustetaan data
-  let data = props.kysymykset;
-  let kyselyN = props.kyselyIndex;
+  let dataM = props.kysymys;
+  console.log(dataM)
   //Valitaan datasta oikea kysely käsiteltäväksi
 
   const näytäVaihtoehdot = (indexK) => {
     //Mikäli tuloksia ei ole palautettu, tulostetaan vain yksi checkbox
     try {
-      return <div> {data[props.kyselyIndex].kysely[indexK].vastaukset.map((alkio, indexV) => 
+      return <div> {dataM.kysely[indexK].vastaukset.map((alkio, indexV) => 
       <div key={"vastaus"}>
         <label><Checkbox className="vastausCheckM" key= {"oikea" + props.kyselyIndex + "" + indexK + "" + indexV}
          checked={alkio.oikea} onChange={(e) => props.muutaOikeaVastaus(e, indexK, indexV)}/>
@@ -52,15 +52,15 @@ export default function MuokkaaKysymyksiä(props) {
   
   return (
     <div className="muokkausosio">
-      <Button className="poistaTT" onClick={()=> props.poistaTentti()}><DeleteIcon/>Poista {data[props.kyselyIndex].nimi}</Button>
+      <Button className="poistaTT" onClick={()=> props.poistaTentti()}><DeleteIcon/>Poista {dataM.nimi}</Button>
       <Button className="lisääUT" onClick={() => props.lisääUusiTentti()}><AddCircleOutlineIcon/>Lisää uusi tentti</Button>
 
-      {data[props.kyselyIndex].kysely.map((item, indexK) => 
+      {dataM.kysely.map((item, indexK) => 
         <Card className="korttiM" elevation={3}>{console.log(item)}
 
           <Input className="kysymysM" 
             key={item.uid}
-            defaultValue={data[props.kyselyIndex].kysely[indexK].kysymys}
+            defaultValue={item.kysymys}
             onChange={(e) => props.muokkaaKysymystä(e, indexK)}>
           </Input> 
 

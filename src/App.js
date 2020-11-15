@@ -1,6 +1,6 @@
 import React from 'react';
 import Fade from 'react-reveal/Fade';
-import {useEffect, useState, useReducer} from 'react';
+import {useEffect, useState, useReducer, initialState} from 'react';
 import './App.css';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -8,6 +8,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import TulostaKysymykset1 from './TulostaKysymykset1';
 import TulostaKysymyksetUusi from './TulostaKysymyksetUusi';
+import uuid from 'react-uuid';
 import MuokkaaKysymyksiä from './MuokkaaKysymyksiä';
 import axios from 'axios';
 
@@ -24,76 +25,74 @@ function App() {
   const [dataAlustettu2, setDataAlustettu2] = useState(false)//Serveriä varten
 
   const [palautettu, setPalautettu] = useState(false)
-  const [kyselyValinta, setKyselyValinta] = useState(0)
+  const [tenttiValinta, settenttiValinta] = useState(0)
   const [näkymä, setNäkymä] = useState(1)
 
   const [state, dispatch] = useReducer(reducer, []);
 
-  //Latausnäkymää varten muuttuja ja useEffect
-
-
-
   //Alkuperäinen taulukko kyselyistä ja niiden vastauksista
   const kyselyt = [
-    {nimi: "Numerovisa", kysely: [
-      {kysymys: "Kuinka monta ihmistä on käynyt kuussa?", vastaukset: [
-        {vastaus: "0", valittu: false, oikea: false}, 
-        {vastaus: "12", valittu: false, oikea: true}, 
-        {vastaus: "15", valittu: false, oikea: false}
+    {uid: uuid(), nimi: "Numerovisa", kysely: [
+      {uid: uuid(), kysymys: "Kuinka monta ihmistä on käynyt kuussa?", vastaukset: [
+        {uid: uuid(), vastaus: "0", valittu: false, oikea: false}, 
+        {uid: uuid(), vastaus: "12", valittu: false, oikea: true}, 
+        {uid: uuid(), vastaus: "15", valittu: false, oikea: false}
         ]},
-      {kysymys: "Kuinka monta sanaa Potter-kirjasarjan suomennoksissa on yhteensä?", vastaukset: [
-        {vastaus: "857 911", valittu: false, oikea: true}, 
-        {vastaus: "955 543", valittu: false, oikea: false}, 
-        {vastaus: "1 100 438", valittu: false, oikea: false}, 
-        {vastaus: "1 204 539", valittu: false, oikea: false}
+      {uid: uuid(), kysymys: "Kuinka monta sanaa Potter-kirjasarjan suomennoksissa on yhteensä?", vastaukset: [
+        {uid: uuid(), vastaus: "857 911", valittu: false, oikea: true}, 
+        {uid: uuid(), vastaus: "955 543", valittu: false, oikea: false}, 
+        {uid: uuid(), vastaus: "1 100 438", valittu: false, oikea: false}, 
+        {uid: uuid(), vastaus: "1 204 539", valittu: false, oikea: false}
         ]},
-      {kysymys: "Mikä seuraavista luvuista on lähinnä Tanskan asukasmäärää?", vastaukset: [
-        {vastaus: "5,2 miljoonaa", valittu: false, oikea: false}, 
-        {vastaus: "5,6 miljoonaa", valittu: false, oikea: false}, 
-        {vastaus: "5,8 miljoonaa", valittu: false, oikea: true}
-        ]}]},
-    {nimi: "Kirjainvisa", kysely: [
-      {
-        kysymys: "Mikä YMCA on suomeksi?", vastaukset: [
-          {vastaus: "YMKY", valittu: false, oikea: false}, 
-          {vastaus: "NMKY", valittu: false, oikea: true}, 
-          {vastaus: "MNKY", valittu: false, oikea: false}
+      {uid: uuid(), kysymys: "Mikä seuraavista luvuista on lähinnä Tanskan asukasmäärää?", vastaukset: [
+        {uid: uuid(), vastaus: "5,2 miljoonaa", valittu: false, oikea: false}, 
+        {uid: uuid(), vastaus: "5,6 miljoonaa", valittu: false, oikea: false}, 
+        {uid: uuid(), vastaus: "5,8 miljoonaa", valittu: false, oikea: true}
+        ]}]
+    },
+    {uid: uuid(), nimi: "Kirjainvisa", kysely: [
+      {uid: uuid(), kysymys: "Mikä YMCA on suomeksi?", vastaukset: [
+          {uid: uuid(), vastaus: "YMKY", valittu: false, oikea: false}, 
+          {uid: uuid(), vastaus: "NMKY", valittu: false, oikea: true}, 
+          {uid: uuid(), vastaus: "MNKY", valittu: false, oikea: false}
         ]},
-        {kysymys: "Mikä seuraavista on GIF?", vastaukset: [
-          {vastaus: "graph iteration format", valittu: false, oikea: false}, 
-          {vastaus: "graphics interchange format", valittu: false, oikea: true}, 
-          {vastaus: "george iliott format ", valittu: false, oikea: false}
+        {uid: uuid(), kysymys: "Mikä seuraavista on GIF?", vastaukset: [
+          {uid: uuid(), vastaus: "graph iteration format", valittu: false, oikea: false}, 
+          {uid: uuid(), vastaus: "graphics interchange format", valittu: false, oikea: true}, 
+          {uid: uuid(), vastaus: "george iliott format ", valittu: false, oikea: false}
         ]},
-        {kysymys: "Kuka on oikea Ben?", vastaukset: [
-          {vastaus: "Ben Zysgowicz", valittu: false, oikea: false}, 
-          {vastaus: "Ben Zyscowicz", valittu: false, oikea: true}, 
-          {vastaus: "Ben Zyskowicz", valittu: false, oikea: false},
-          {vastaus: "Ben Zysćowicz", valittu: false, oikea: false}
-        ]}]},
-      {nimi: "Merkkivisa", kysely: [
-        {
-          kysymys: "Mikä seuraavista shakkipelin merkinnöistä tarkoittaa 'arveluttava siirto, mutta ei suoraan osoitettavissa virheeksi'?", vastaukset: [
-            {vastaus: "?", valittu: false, oikea: false}, 
-            {vastaus: "??", valittu: false, oikea: false}, 
-            {vastaus: "?!", valittu: false, oikea: true},
-            {vastaus: "!?", valittu: false, oikea: false}
+        {uid: uuid(), kysymys: "Kuka on oikea Ben?", vastaukset: [
+          {uid: uuid(), vastaus: "Ben Zysgowicz", valittu: false, oikea: false}, 
+          {uid: uuid(), vastaus: "Ben Zyscowicz", valittu: false, oikea: true}, 
+          {uid: uuid(), vastaus: "Ben Zyskowicz", valittu: false, oikea: false},
+          {uid: uuid(), vastaus: "Ben Zysćowicz", valittu: false, oikea: false}
+        ]}]
+      },
+      {uid: uuid(), nimi: "Merkkivisa", kysely: [
+        {uid: uuid(), kysymys: "Mikä seuraavista shakkipelin merkinnöistä tarkoittaa 'arveluttava siirto, mutta ei suoraan osoitettavissa virheeksi'?", vastaukset: [
+            {uid: uuid(), vastaus: "?", valittu: false, oikea: false}, 
+            {uid: uuid(), vastaus: "??", valittu: false, oikea: false}, 
+            {uid: uuid(), vastaus: "?!", valittu: false, oikea: true},
+            {uid: uuid(), vastaus: "!?", valittu: false, oikea: false}
            ]},
-          {kysymys: "Mikä ‽ on englanninkieliseltä nimeltään?", vastaukset: [
-            {vastaus: "Interrobang", valittu: false, oikea: true}, 
-            {vastaus: "Sulivabang", valittu: false, oikea: false}, 
-            {vastaus: "Guessbang", valittu: false, oikea: false}
+          {uid: uuid(), kysymys: "Mikä ‽ on englanninkieliseltä nimeltään?", vastaukset: [
+            {uid: uuid(), vastaus: "Interrobang", valittu: false, oikea: true}, 
+            {uid: uuid(), vastaus: "Sulivabang", valittu: false, oikea: false}, 
+            {uid: uuid(), vastaus: "Guessbang", valittu: false, oikea: false}
           ]},
-          {kysymys: "Mitä matemaattinen merkki ∂ tarkoittaa?", vastaukset: [
-            {vastaus: "Tyhjä joukko", valittu: false, oikea: false}, 
-            {vastaus: "Normaali aliryhmä", valittu: false, oikea: true}, 
-            {vastaus: "Gradientti", valittu: false, oikea: false},
-            {vastaus: "Osittaisderivaatta", valittu: false, oikea: false}
-          ]}]}
-      ]
+          {uid: uuid(), kysymys: "Mitä matemaattinen merkki ∂ tarkoittaa?", vastaukset: [
+            {uid: uuid(), vastaus: "Tyhjä joukko", valittu: false, oikea: false}, 
+            {uid: uuid(), vastaus: "Normaali aliryhmä", valittu: false, oikea: true}, 
+            {uid: uuid(), vastaus: "Gradientti", valittu: false, oikea: false},
+            {uid: uuid(), vastaus: "Osittaisderivaatta", valittu: false, oikea: false}
+          ]}
+        ]
+      }
+    ]
 
   //data serverin datan muodostamista varten
-  const kyselytKopio = 
-    [{nimi: "Numerovisa", kysely: [
+  const kyselyt2 = 
+    [{nimi: "Numerovisa testi", kysely: [
       {kysymys: "Kuinka monta ihmistä on käynyt kuussa?", vastaukset: [
         {vastaus: "0", valittu: false, oikea: false}, 
         {vastaus: "12", valittu: false, oikea: true}, 
@@ -109,10 +108,11 @@ function App() {
         {vastaus: "5,2 miljoonaa", valittu: false, oikea: false}, 
         {vastaus: "5,6 miljoonaa", valittu: false, oikea: false}, 
         {vastaus: "5,8 miljoonaa", valittu: false, oikea: true}
-        ]}],
-      nimi: "Kirjainvisa", kysely: [
-        {
-        kysymys: "Mikä YMCA on suomeksi?", vastaukset: [
+        ]}
+      ]
+    },
+      {nimi: "Kirjainvisa", kysely: [
+        {kysymys: "Mikä YMCA on suomeksi?", vastaukset: [
           {vastaus: "YMKY", valittu: false, oikea: false}, 
           {vastaus: "NMKY", valittu: false, oikea: true}, 
           {vastaus: "MNKY", valittu: false, oikea: false}
@@ -127,8 +127,10 @@ function App() {
           {vastaus: "Ben Zyscowicz", valittu: false, oikea: true}, 
           {vastaus: "Ben Zyskowicz", valittu: false, oikea: false},
           {vastaus: "Ben Zysćowicz", valittu: false, oikea: false}
-        ]}],
-      nimi: "Merkkivisa", kysely: [
+        ]}
+      ]
+    },
+      {nimi: "Merkkivisa", kysely: [
         {
           kysymys: "Mikä seuraavista shakkipelin merkinnöistä tarkoittaa 'arveluttava siirto, mutta ei suoraan osoitettavissa virheeksi'?", vastaukset: [
             {vastaus: "?", valittu: false, oikea: false}, 
@@ -146,17 +148,19 @@ function App() {
             {vastaus: "Normaali aliryhmä", valittu: false, oikea: true}, 
             {vastaus: "Gradientti", valittu: false, oikea: false},
             {vastaus: "Osittaisderivaatta", valittu: false, oikea: false}
-        ]}]
-    }]
+        ]}
+      ]
+    }
+  ]
           
 
   useEffect(()=>{
     ////////////////////////////POST
     const createData = async () => {
       try{
-        let result = await axios.post("http://localhost:3001/kyselyt", kyselytKopio)
-        dispatch({type: "INIT_DATA", data: kyselytKopio})
-        //setData2(kyselytKopio)
+        let result = await axios.post("http://localhost:3001/kyselyt", kyselyt2)
+        dispatch({type: "INIT_DATA", data: kyselyt2})
+        setData2(kyselyt2)
         setDataAlustettu2(true)
       }
       catch(exception){
@@ -169,7 +173,7 @@ function App() {
         let result = await axios.get("http://localhost:3001/kyselyt")
         if (result.data.lenght > 0){
           dispatch({type: "INIT_DATA", data: result.data})
-          //setData2(result.data);
+          setData2(result.data);
           setDataAlustettu2(true)
         }else{
           throw("Tietokannan alustaminen epäonnistui (Get)") 
@@ -224,7 +228,7 @@ function App() {
   const vastausValittu = (event, kysymysI, vastausI) => {
     try{
     let syväKopio = JSON.parse(JSON.stringify(data))
-    syväKopio[kyselyValinta].kysely[kysymysI].vastaukset[vastausI].valittu = event.target.checked
+    syväKopio[tenttiValinta].kysely[kysymysI].vastaukset[vastausI].valittu = event.target.checked
     setData(syväKopio)
     return null;
     }catch{
@@ -267,36 +271,42 @@ function App() {
 
 
   ///////////////////////////REDUCER
-  function reducer(state, action) {
-    let syväKopio = JSON.parse(JSON.stringify(state))
+  function reducer(state, action) { //data tai state
+    console.log(state)
+    let syväKopio = JSON.parse(JSON.stringify(state)) //data vai state?
+    console.log(syväKopio[0])
     switch (action.type) {
       case 'INIT_DATA':
         return action.data;
+      case 'VASTAUS_VALITTU':
+        //syväKopio[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].valittu = action.data.valittuV
+        syväKopio[tenttiValinta].kysely[0].vastaukset[0].valittu = action.data.valittuV
+        return syväKopio
       case 'MUUTA_VASTAUSTA':
         //(event) => dispatch({type: "MUUTA_VASTAUSTA", data:{vastausT:event.target.value, indexK: index, indexV: index}})
         
-        //syväKopio[kyselyValinta].kysely[action.data.IndexK].vastaukset[action.data.indexV].vastaus = action.data.vastaus
-        syväKopio[kyselyValinta].kysely[0].vastaukset[0].vastaus = "testi"
+        //syväKopio[tenttiValinta].kysely[action.data.IndexK].vastaukset[action.data.indexV].vastaus = action.data.vastaus
+        syväKopio[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].vastaus = action.data.value
         return syväKopio
       case 'MUUTA_OIKEA_VASTAUS':
-        syväKopio[kyselyValinta].kysely[0].vastaukset[0].oikea = "event.target.checked"
+        syväKopio[tenttiValinta].kysely[0].vastaukset[0].oikea = "event.target.checked"
         return syväKopio
       case 'POISTA_VASTAUS':
-        syväKopio[kyselyValinta].kysely[0].vastaukset.splice(0, 1)
+        syväKopio[tenttiValinta].kysely[0].vastaukset.splice(0, 1)
         return syväKopio
       case 'LISÄÄ_VASTAUS':
         let uusiVastaus = {vastaus: "", valittu: false, oikea: false}
-        syväKopio[kyselyValinta].kysely[0].vastaukset.push(uusiVastaus)
+        syväKopio[tenttiValinta].kysely[0].vastaukset.push(uusiVastaus)
         return syväKopio
       case 'MUOKKAA_KYSYMYSTÄ':
-        syväKopio[kyselyValinta].kysely[0].kysymys = "event.target.value"
+        syväKopio[tenttiValinta].kysely[0].kysymys = "event.target.value"
         return syväKopio
       case 'LISÄÄ_KYSYMYS':
         let uusiKysymys =  {kysymys: "", vastaukset: []}
-        syväKopio[kyselyValinta].kysely.push(uusiKysymys)
+        syväKopio[tenttiValinta].kysely.push(uusiKysymys)
         return syväKopio
       case 'POISTA_KYSYMYS':
-        syväKopio[kyselyValinta].kysely.splice(0, 1)
+        syväKopio[tenttiValinta].kysely.splice(0, 1)
         return syväKopio
       case 'LISÄÄ_TENTTI':
         let tenttiNimi = prompt("Anna uudelle tentille nimi:", "");
@@ -317,45 +327,45 @@ function App() {
   //////////////////////////Funktiot listan muokkaamista varten
   const muokkaaVastausta = (event, kysymysI, vastausI) => {
     let syväKopio = JSON.parse(JSON.stringify(data))
-    syväKopio[kyselyValinta].kysely[kysymysI].vastaukset[vastausI].vastaus = event.target.value
+    syväKopio[tenttiValinta].kysely[kysymysI].vastaukset[vastausI].vastaus = event.target.value
     setData(syväKopio)
   }
 
   const muutaOikeaVastaus = (event, kysymysI, vastausI) => {
     let syväKopio = JSON.parse(JSON.stringify(data))
-    syväKopio[kyselyValinta].kysely[kysymysI].vastaukset[vastausI].oikea = event.target.checked
+    syväKopio[tenttiValinta].kysely[kysymysI].vastaukset[vastausI].oikea = event.target.checked
     setData(syväKopio)
   }
 
   const poistaVastaus = (kysymysI, vastausI) => {
     let syväKopio = JSON.parse(JSON.stringify(data))
-    syväKopio[kyselyValinta].kysely[kysymysI].vastaukset.splice(vastausI, 1)
+    syväKopio[tenttiValinta].kysely[kysymysI].vastaukset.splice(vastausI, 1)
     setData(syväKopio)
   }
 
   const lisääVastaus = (kysymysI) => {
     let syväKopio = JSON.parse(JSON.stringify(data))
     let uusiVastaus = {vastaus: "", valittu: false, oikea: false}
-    syväKopio[kyselyValinta].kysely[kysymysI].vastaukset.push(uusiVastaus)
+    syväKopio[tenttiValinta].kysely[kysymysI].vastaukset.push(uusiVastaus)
     setData(syväKopio)
   }
 
   const muokkaaKysymystä = (event, kysymysI) => {
     let syväKopio = JSON.parse(JSON.stringify(data))
-    syväKopio[kyselyValinta].kysely[kysymysI].kysymys = event.target.value
+    syväKopio[tenttiValinta].kysely[kysymysI].kysymys = event.target.value
     setData(syväKopio)
   }
 
   const lisääKysymys = () => {
     let syväKopio = JSON.parse(JSON.stringify(data))
     let uusiKysymys =  {kysymys: "", vastaukset: []}
-    syväKopio[kyselyValinta].kysely.push(uusiKysymys)
+    syväKopio[tenttiValinta].kysely.push(uusiKysymys)
     setData(syväKopio)
   }
 
   const poistaKysymys = (kysymysI) => {
     let syväKopio = JSON.parse(JSON.stringify(data))
-    syväKopio[kyselyValinta].kysely.splice(kysymysI, 1)
+    syväKopio[tenttiValinta].kysely.splice(kysymysI, 1)
     setData(syväKopio)
   }
 
@@ -372,19 +382,19 @@ function App() {
   const poistaTentti = () => {
     let syväKopio = JSON.parse(JSON.stringify(data))
     if(data.length > 1){
-      syväKopio.splice(kyselyValinta, 1)
+      syväKopio.splice(tenttiValinta, 1)
     setData(syväKopio)
     }
     else {
       alert("Tenttejä on oltava vähintään yksi.")
     }
-    setKyselyValinta(0)
+    settenttiValinta(0)
   }
-
-
-  
-  
-  console.log(data)
+  console.log("data") 
+  console.log(data) 
+  console.log("serverin data") 
+  console.log(data2) 
+  console.log("state") 
   console.log(state)
   return (
     <div>
@@ -405,16 +415,16 @@ function App() {
 
       <div className="kysymysosio">
         {/*Painikkeet kyselyn valintaa varten*/}
-        {data.map((arvo, index) => <Button variant={"contained"} onClick={() => {setKyselyValinta(index); setPalautettu(false); nowLoading();}}>{arvo.nimi}</Button>)}
+        {data.map((arvo, index) => <Button variant={"contained"} onClick={() => {settenttiValinta(index); setPalautettu(false); nowLoading();}}>{arvo.nimi}</Button>)}
         <br/>
         <br/>
         {näkymä == 1 ? <div>
           <Fade right><TulostaKysymykset1 
+            dispatch={dispatch}
             muutaVastaus={vastausValittu} 
             kysymys={data} 
             palautettu= {palautettu}
-            kyselyIndex= {kyselyValinta}
-            dispatch={dispatch}>
+            kyselyIndex= {tenttiValinta}>
           </TulostaKysymykset1></Fade>
         <br/>
         <Button variant={"contained"} color="primary" onClick={() => {setPalautettu(true); nowLoading();}}>Näytä vastaukset</Button>
@@ -422,7 +432,7 @@ function App() {
           <Fade right><MuokkaaKysymyksiä 
             dispatch={dispatch}
             kysymykset={data} 
-            kyselyIndex={kyselyValinta}
+            kyselyIndex={tenttiValinta}
             muokkaaVastausta={muokkaaVastausta}
             muutaOikeaVastaus={muutaOikeaVastaus}
             muokkaaKysymystä={muokkaaKysymystä}
@@ -440,7 +450,7 @@ function App() {
             muutaVastaus={vastausValittu} 
             vainKysymys={data} 
             palautettu= {palautettu}
-            kyselyIndex= {kyselyValinta}>
+            kyselyIndex= {tenttiValinta}>
           </TulostaKysymyksetUusi></Fade> */}
           <br></br>
           <Button variant={"contained"} color="primary">Tyhjää muisti</Button>

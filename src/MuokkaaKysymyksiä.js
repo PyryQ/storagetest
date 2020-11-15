@@ -38,7 +38,7 @@ export default function MuokkaaKysymyksiä(props) {
         
         <Input key={"vastausInput" + props.kyselyIndex + "" + indexK + "" + indexV} 
         className="vastausM" defaultValue={alkio.vastaus} 
-        onChange = {(e) => props.muokkaaVastausta(e, indexK, indexV)}></Input>
+        onChange = {(event) => props.dispatch({type: 'VASTAUS_VALITTU', data:{valittuV:event.target.value, indexKy: indexK, indexVa: indexV}})}></Input>
 
         <Button className="vastausPoisto" key={alkio}
         id={indexV} onClick={() => props.poistaVastaus(indexK, indexV)}><DeleteIcon></DeleteIcon></Button>
@@ -59,7 +59,7 @@ export default function MuokkaaKysymyksiä(props) {
         <Card className="korttiM" elevation={3}>{console.log(item)}
 
           <Input className="kysymysM" 
-            key={"kysymys" + props.kyselyIndex + "" + indexK}
+            key={item.uid}
             defaultValue={data[props.kyselyIndex].kysely[indexK].kysymys}
             onChange={(e) => props.muokkaaKysymystä(e, indexK)}>
           </Input> 

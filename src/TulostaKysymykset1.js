@@ -39,28 +39,30 @@ export default function TulostaKysymykset1(props) {
     }
     catch{
       alert("Vastausten tarkistus epäonnistui")
+      return null
     }
   }
 
   //Tulostetaan vaihtoehdot sen mukaan, onko vastaukset palautettu
-  const näytäVaihtoehdot = (indexK) => {
+  const näytäVaihtoehdot = (indexK) => { //Kysymyksen index
     
     //Mikäli tuloksia ei ole palautettu, tulostetaan vain yksi checkbox
     if (palautettu === false){
-      return dataU[props.kyselyIndex].kysely[indexK].vastaukset.map((alkio, vastausIndex) => 
-      <div key={vastausIndex}>
+      return dataU[props.kyselyIndex].kysely[indexK].vastaukset.map((alkio, indexV) => 
+      <div key={indexV}>
         <label><Checkbox disabled={palautettu === true} className="kysymys" key={alkio}
-        id={vastausIndex} checked={alkio.valittu} onChange={(e) => props.muutaVastaus(e, indexK, vastausIndex)}/>
+        id={indexV} checked={alkio.valittu} 
+        onChange={(event) => props.dispatch({type: 'VASTAUS_VALITTU', data:{valittuV:event.target.checked, indexKy: indexK, indexVa: indexV}})}/>
         {alkio.vastaus}</label>
 
       </div>)
     }
 
     //Mikäli vastaukset on palautettu, tulostetaan myös vastaukset GreenCheckBoxin avulla
-    return dataU[props.kyselyIndex].kysely[indexK].vastaukset.map((alkio, vastausIndex) => 
-      <div key={vastausIndex}>
-        <label><Checkbox disabled key={alkio + "" + vastausIndex} checked={alkio.valittu}
-        id={vastausIndex} onChange={(e) => props.muutaVastaus(e, indexK, vastausIndex)}/>
+    return dataU[props.kyselyIndex].kysely[indexK].vastaukset.map((alkio, indexV) => 
+      <div key={indexV}>
+        <label><Checkbox disabled key={alkio + "" + indexV} checked={alkio.valittu}
+        id={indexV} onChange={(e) => props.muutaVastaus(e, indexK, indexV)}/>
 
         <GreenCheckbox disabled className="vastaukset" checked={alkio.oikea}/>
         {alkio.vastaus}</label>

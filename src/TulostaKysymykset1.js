@@ -27,16 +27,17 @@ export default function TulostaKysymykset1(props) {
 
   const vastaustenTarkistus = (index) =>{
     try{
-      let pituus = dataT.kysely.length
       let tarkistus = dataT.kysely[index].vastaukset
-      console.log(tarkistus)
-      for (var i = 0; i < pituus; i++){
+      console.log(tarkistus.length)
+      if (tarkistus.length !== 0){
+      for (var i = 0; i < tarkistus.length; i++){
         if (tarkistus[i].oikea !== tarkistus[i].valittu){
           return (<CloseIcon/>);
         }
       }
       return (<CheckIcon/>);
     }
+  }
     catch{
       alert("Vastausten tarkistus epäonnistui")
       return null

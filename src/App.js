@@ -17,7 +17,8 @@ import axios from 'axios';
 // Muuttujien nimien selkeytys
 // Kommentointia
 // Hookit, onBlur
-//tyhjää muisti - painike
+// tyhjää muisti - painike
+// Tentin lisäys
 
 function App() {
 
@@ -259,8 +260,6 @@ function App() {
   const classes1 = useStyles();
 
   
-
-
   ////////////Latausnäkymätestailua
   const [loading, setLoading] = useState(true)
 
@@ -275,6 +274,7 @@ function App() {
 
 
   ///////////////////////////REDUCER
+  
   function reducer(state, action) { //data tai state
     //ReferenceError: Cannot access 'syväKopio' before initialization
     //^^Mikäli syväkopiota kutsutaan caseissa
@@ -286,56 +286,45 @@ function App() {
         return action.data;
       case 'VASTAUS_VALITTU':
         console.log(action.data.indexKy)
-        let syväKopioVV = JSON.parse(JSON.stringify(state))
-        syväKopioVV[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].valittu = action.data.valittuV
-        return syväKopioVV
+        syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].valittu = action.data.valittuV
+        return syväKopioR
       case 'MUUTA_VASTAUSTA':
-        let syväKopioMV = JSON.parse(JSON.stringify(state))
-        syväKopioMV[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].vastaus = action.data.valittuV
-        return syväKopioMV
+        syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].vastaus = action.data.valittuV
+        return syväKopioR
       case 'MUUTA_OIKEA_VASTAUS':
-        let syväKopioMOV = JSON.parse(JSON.stringify(state))
-        syväKopioMOV[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].oikea = action.data.valittuV
-        return syväKopioMOV
+        syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].oikea = action.data.valittuV
+        return syväKopioR
       case 'POISTA_VASTAUS':
-        let syväKopioPV = JSON.parse(JSON.stringify(state))
-        syväKopioPV[tenttiValinta].kysely[action.data.indexKy].vastaukset.splice(action.data.indexVa, 1)
-        return syväKopioPV
+        syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset.splice(action.data.indexVa, 1)
+        return syväKopioR
       case 'LISÄÄ_VASTAUS':
         let uusiVastaus = {vastaus: "", valittu: false, oikea: false}
-        let syväKopioLV = JSON.parse(JSON.stringify(state))
-        syväKopioLV[tenttiValinta].kysely[action.data.indexKy].vastaukset.push(uusiVastaus)
-        return syväKopioLV
+        syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset.push(uusiVastaus)
+        return syväKopioR
       case 'MUOKKAA_KYSYMYSTÄ':
-        let syväKopioMK = JSON.parse(JSON.stringify(state))
-        syväKopioMK[tenttiValinta].kysely[action.data.indexKy].kysymys = action.data.valittuK
-        return syväKopioMK
+        syväKopioR[tenttiValinta].kysely[action.data.indexKy].kysymys = action.data.valittuK
+        return syväKopioR
       case 'LISÄÄ_KYSYMYS':
-        let syväKopioLK = JSON.parse(JSON.stringify(state))
         let uusiKysymys =  {kysymys: "", vastaukset: []}
-        syväKopioLK[tenttiValinta].kysely.push(uusiKysymys)
-        return syväKopioLK
+        syväKopioR[tenttiValinta].kysely.push(uusiKysymys)
+        return syväKopioR
       case 'POISTA_KYSYMYS':
-        let syväKopioPK = JSON.parse(JSON.stringify(state))
-        syväKopioPK[tenttiValinta].kysely.splice(0, 1)
-        return syväKopioPK
+        syväKopioR[tenttiValinta].kysely.splice(action.data.indexKy, 1)
+        return syväKopioR
       case 'LISÄÄ_TENTTI':
         let tenttiNimi = prompt("Anna uudelle tentille nimi:", "");
-        let syväKopioLT = JSON.parse(JSON.stringify(state));
-        let uusiKysely = {nimi: tenttiNimi, kysely: [
+        let uusiTentti = {nimi: tenttiNimi, kysely: [
           {kysymys: "", vastaukset: [{vastaus: "", valittu: false, oikea: false}]}]
         }
-        syväKopioLT.push(uusiKysely)
-        return syväKopioLT
+        syväKopioR.push(uusiTentti)
+        return syväKopioR
       case 'POISTA_TENTTI':
-        let syväKopioPT = JSON.parse(JSON.stringify(state))
         console.log(tenttiValinta)
         if(state.length > 1){
-          syväKopioPT.splice(tenttiValinta, 1)
+          syväKopioR.splice(tenttiValinta, 1)
         }
         console.log(tenttiValinta)
-        settenttiValinta(0)
-        return syväKopioPT
+        return syväKopioR
       default:
         throw new Error();
     }
@@ -360,72 +349,74 @@ function App() {
   //const refContainer = useRef(initialValue)
 
 
-  //////////////////////////Funktiot listan muokkaamista varten
-  const muokkaaVastausta = (event, kysymysI, vastausI) => {
-    let syväKopio = JSON.parse(JSON.stringify(data))
-    syväKopio[tenttiValinta].kysely[kysymysI].vastaukset[vastausI].vastaus = event.target.value
-    setData(syväKopio)
-  }
+  //////////////////////////Funktiot listan muokkaamista varten, toteutettu reducerilla
+  // const muokkaaVastausta = (event, kysymysI, vastausI) => {
+  //   let syväKopio = JSON.parse(JSON.stringify(data))
+  //   syväKopio[tenttiValinta].kysely[kysymysI].vastaukset[vastausI].vastaus = event.target.value
+  //   setData(syväKopio)
+  // }
 
-  const muutaOikeaVastaus = (event, kysymysI, vastausI) => {
-    let syväKopio = JSON.parse(JSON.stringify(data))
-    syväKopio[tenttiValinta].kysely[kysymysI].vastaukset[vastausI].oikea = event.target.checked
-    setData(syväKopio)
-  }
+  // const muutaOikeaVastaus = (event, kysymysI, vastausI) => {
+  //   let syväKopio = JSON.parse(JSON.stringify(data))
+  //   syväKopio[tenttiValinta].kysely[kysymysI].vastaukset[vastausI].oikea = event.target.checked
+  //   setData(syväKopio)
+  // }
 
-  const poistaVastaus = (kysymysI, vastausI) => {
-    let syväKopio = JSON.parse(JSON.stringify(data))
-    syväKopio[tenttiValinta].kysely[kysymysI].vastaukset.splice(vastausI, 1)
-    setData(syväKopio)
-  }
+  // const poistaVastaus = (kysymysI, vastausI) => {
+  //   let syväKopio = JSON.parse(JSON.stringify(data))
+  //   syväKopio[tenttiValinta].kysely[kysymysI].vastaukset.splice(vastausI, 1)
+  //   setData(syväKopio)
+  // }
 
-  const lisääVastaus = (kysymysI) => {
-    let syväKopio = JSON.parse(JSON.stringify(data))
-    let uusiVastaus = {vastaus: "", valittu: false, oikea: false}
-    syväKopio[tenttiValinta].kysely[kysymysI].vastaukset.push(uusiVastaus)
-    setData(syväKopio)
-  }
+  // const lisääVastaus = (kysymysI) => {
+  //   let syväKopio = JSON.parse(JSON.stringify(data))
+  //   let uusiVastaus = {vastaus: "", valittu: false, oikea: false}
+  //   syväKopio[tenttiValinta].kysely[kysymysI].vastaukset.push(uusiVastaus)
+  //   setData(syväKopio)
+  // }
 
-  const muokkaaKysymystä = (event, kysymysI) => {
-    let syväKopio = JSON.parse(JSON.stringify(data))
-    syväKopio[tenttiValinta].kysely[kysymysI].kysymys = event.target.value
-    setData(syväKopio)
-  }
+  // const muokkaaKysymystä = (event, kysymysI) => {
+  //   let syväKopio = JSON.parse(JSON.stringify(data))
+  //   syväKopio[tenttiValinta].kysely[kysymysI].kysymys = event.target.value
+  //   setData(syväKopio)
+  // }
 
-  const lisääKysymys = () => {
-    let syväKopio = JSON.parse(JSON.stringify(data))
-    let uusiKysymys =  {kysymys: "", vastaukset: []}
-    syväKopio[tenttiValinta].kysely.push(uusiKysymys)
-    setData(syväKopio)
-  }
+  // const lisääKysymys = () => {
+  //   let syväKopio = JSON.parse(JSON.stringify(data))
+  //   let uusiKysymys =  {kysymys: "", vastaukset: []}
+  //   syväKopio[tenttiValinta].kysely.push(uusiKysymys)
+  //   setData(syväKopio)
+  // }
 
-  const poistaKysymys = (kysymysI) => {
-    let syväKopio = JSON.parse(JSON.stringify(data))
-    syväKopio[tenttiValinta].kysely.splice(kysymysI, 1)
-    setData(syväKopio)
-  }
+  // const poistaKysymys = (kysymysI) => {
+  //   let syväKopio = JSON.parse(JSON.stringify(data))
+  //   syväKopio[tenttiValinta].kysely.splice(kysymysI, 1)
+  //   setData(syväKopio)
+  // }
 
-  const lisääUusiTentti = () => {
-    let tenttiNimi = prompt("Anna uudelle tentille nimi:", "");
-    let syväKopio = JSON.parse(JSON.stringify(data))
-    let uusiKysely = {nimi: tenttiNimi, kysely: [
-      {kysymys: "", vastaukset: [{vastaus: "", valittu: false, oikea: false}]}]
-    }
-    syväKopio.push(uusiKysely)
-    setData(syväKopio)
-  }
+  // const lisääUusiTentti = () => {
+  //   let tenttiNimi = prompt("Anna uudelle tentille nimi:", "");
+  //   let syväKopio = JSON.parse(JSON.stringify(data))
+  //   let uusiKysely = {nimi: tenttiNimi, kysely: [
+  //     {kysymys: "", vastaukset: [{vastaus: "", valittu: false, oikea: false}]}]
+  //   }
+  //   syväKopio.push(uusiKysely)
+  //   setData(syväKopio)
+  // }
 
-  const poistaTentti = () => {
-    let syväKopio = JSON.parse(JSON.stringify(data))
-    if(data.length > 1){
-      syväKopio.splice(tenttiValinta, 1)
-    setData(syväKopio)
-    }
-    else {
-      alert("Tenttejä on oltava vähintään yksi.")
-    }
-    settenttiValinta(0)
-  }
+  // const poistaTentti = () => {
+  //   let syväKopio = JSON.parse(JSON.stringify(data))
+  //   if(data.length > 1){
+  //     syväKopio.splice(tenttiValinta, 1)
+  //   setData(syväKopio)
+  //   }
+  //   else {
+  //     alert("Tenttejä on oltava vähintään yksi.")
+  //   }
+  //   settenttiValinta(0)
+  // }
+
+
   console.log("state") 
   console.log(state)
   return (
@@ -447,7 +438,7 @@ function App() {
 
       <div className="kysymysosio">
         {/*Painikkeet kyselyn valintaa varten*/}
-        {state.map((arvo, index) => <Button variant={"contained"} onClick={() => {settenttiValinta(index); setPalautettu(false); nowLoading();}}>{arvo.nimi}</Button>)}
+        {state.map((arvo, index) => <Button className="tenttiValinta" variant={"contained"} onClick={() => {settenttiValinta(index); setPalautettu(false); nowLoading();}}>{arvo.nimi}</Button>)}
         <br/>
         <br/>
         {state[tenttiValinta] != undefined ? (

@@ -66,7 +66,7 @@ export default function MuokkaaKysymyksiä(props) {
             onChange={(e) => props.dispatch({type: 'MUOKKAA_KYSYMYSTÄ', data:{valittuK: e.target.value, indexKy: indexK}})}>
           </Input> 
 
-          <Button className="poistoM" onClick={() => props.dispatch({type: 'POISTA_KYSYMYS', data:{}})}>
+          <Button className="poistoM" onClick={() => props.dispatch({type: 'POISTA_KYSYMYS', data:{indexKy: indexK}})}>
             <DeleteIcon/></Button>{näytäVaihtoehdot(item, indexK)}</div>
         </Card>)}
       <div>

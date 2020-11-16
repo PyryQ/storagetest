@@ -24,23 +24,23 @@ export default function MuokkaaKysymyksiä(props) {
 
   //Alustetaan data
   let dataM = props.kysymys;
-  //console.log(dataM)
+  console.log(dataM)
   //Valitaan datasta oikea kysely käsiteltäväksi
 
   const näytäVaihtoehdot = (itemK, indexK) => {
     //Mikäli tuloksia ei ole palautettu, tulostetaan vain yksi checkbox
     try {
       return <div> {dataM.kysely[indexK].vastaukset.map((alkio, indexV) => 
-      <div key={itemK.uid}>
+      <div key={alkio.uid}>
         <label><Checkbox className="vastausCheckM" key= {"oikea" + props.kyselyIndex + "" + indexK + "" + indexV}
          checked={alkio.oikea} onChange={(e) => props.dispatch({type: 'MUUTA_OIKEA_VASTAUS', data:{valittuV: e.target.checked, indexKy: indexK, indexVa: indexV}})}/>
         </label>
         
-        <Input key={itemK.uid} className="vastausM" defaultValue={alkio.vastaus} 
+        <Input className="vastausM" defaultValue={alkio.vastaus} 
           onChange = {(e) => props.dispatch({type: 'MUUTA_VASTAUSTA', data:{valittuV: e.target.value, indexKy: indexK, indexVa: indexV}})}>
         </Input>
 
-        <Button className="vastausPoisto" key={itemK.uid}
+        <Button className="vastausPoisto"
           id={indexV} onClick={() => props.dispatch({type: 'POISTA_VASTAUS', data:{indexKy: indexK, indexVa: indexV}})}>
         <DeleteIcon></DeleteIcon></Button>
 
@@ -55,20 +55,19 @@ export default function MuokkaaKysymyksiä(props) {
   
   return (
     <div className="muokkausosio">
-      <Button className="poistaTT" onClick={()=> props.poistaTentti()}><DeleteIcon/>Poista {dataM.nimi}</Button>
-      <Button className="lisääUT" onClick={() => props.lisääUusiTentti()}><AddCircleOutlineIcon/>Lisää uusi tentti</Button>
+      <Button className="poistaTT" onClick={() => props.dispatch({type: 'POISTA_TENTTI', data:{}})}><DeleteIcon/>Poista {dataM.nimi}</Button>
+      <Button className="lisääUT" onClick={() => props.dispatch({type: 'LISÄÄ_TENTTI', data:{}})}><AddCircleOutlineIcon/>Lisää uusi tentti</Button>
 
       {dataM.kysely.map((item, indexK) => 
         <Card className="korttiM" elevation={3}>
-
+          <div key={item.uid}>
           <Input className="kysymysM" 
-            key={item.uid}
             defaultValue={item.kysymys}
             onChange={(e) => props.dispatch({type: 'MUOKKAA_KYSYMYSTÄ', data:{valittuK: e.target.value, indexKy: indexK}})}>
           </Input> 
 
           <Button className="poistoM" onClick={() => props.dispatch({type: 'POISTA_KYSYMYS', data:{}})}>
-            <DeleteIcon/></Button>{näytäVaihtoehdot(item, indexK)}
+            <DeleteIcon/></Button>{näytäVaihtoehdot(item, indexK)}</div>
         </Card>)}
       <div>
         <Button className="lisääK" 

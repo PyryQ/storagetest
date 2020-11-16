@@ -1,26 +1,111 @@
 {
   "kyselyt": [
     {
+      "uid": "7afe17-c81-621b-318-54dd20dbf407",
       "nimi": "Numerovisa testi",
-      "kysely": []
+      "kysely": [
+        {
+          "uid": "34172-f2f8-bbc5-45f0-b4a513e43f1b",
+          "kysymys": "Kuinka monta ihmistä on käynyt kuussa?",
+          "vastaukset": [
+            {
+              "uid": "bbbc2bd-8b7-dc15-503a-7ba81d4188",
+              "vastaus": "0",
+              "valittu": false,
+              "oikea": false
+            },
+            {
+              "uid": "048d22-adbc-acf-db38-84f7c3f74cee",
+              "vastaus": "12",
+              "valittu": false,
+              "oikea": true
+            },
+            {
+              "uid": "d36b862-acd-1d0d-6521-6c5351aa5025",
+              "vastaus": "15",
+              "valittu": false,
+              "oikea": false
+            }
+          ]
+        },
+        {
+          "uid": "5802ae1-3a45-e561-6d01-302767bf6a1c",
+          "kysymys": "Kuinka monta sanaa Potter-kirjasarjan suomennoksissa on yhteensä?",
+          "vastaukset": [
+            {
+              "uid": "70030b-f1e2-6010-0bf5-c8dd0d6ba7",
+              "vastaus": "857 911",
+              "valittu": false,
+              "oikea": true
+            },
+            {
+              "uid": "07bcb42-eb5-8d60-ff7c-be1cbe61d3",
+              "vastaus": "955 543",
+              "valittu": false,
+              "oikea": false
+            },
+            {
+              "uid": "a885f40-5145-dc13-4374-488620f3274",
+              "vastaus": "1 100 438",
+              "valittu": false,
+              "oikea": false
+            },
+            {
+              "uid": "d3f83a3-f82-c7d-fc33-6254b20842",
+              "vastaus": "1 204 539",
+              "valittu": false,
+              "oikea": false
+            }
+          ]
+        },
+        {
+          "uid": "503f02-ba4a-6bb2-f72b-dc187f61cfc",
+          "kysymys": "Mikä seuraavista luvuista on lähinnä Tanskan asukasmäärää?",
+          "vastaukset": [
+            {
+              "uid": "fd0caef-d210-8e05-cfc-862a0c76ba7d",
+              "vastaus": "5,2 miljoonaa",
+              "valittu": false,
+              "oikea": false
+            },
+            {
+              "uid": "a55d305-4bdc-0ddc-6858-b3736ee04d33",
+              "vastaus": "5,6 miljoonaa",
+              "valittu": false,
+              "oikea": false
+            },
+            {
+              "uid": "8db526-8e15-ffc1-b12f-5e836b7f001",
+              "vastaus": "5,8 miljoonaa",
+              "valittu": false,
+              "oikea": true
+            }
+          ]
+        }
+      ]
     },
     {
+      "uid": "3af42-a867-1e54-c22-f5b3a87afd",
       "nimi": "Kirjainvisa",
       "kysely": [
         {
+          "uid": "cb5fc1b-38fb-da1d-c5e-5d6bade41",
           "kysymys": "Mikä YMCA on suomeksi?",
           "vastaukset": [
             {
+              "uid": "eaa7c76-08e8-4eb-f066-00fb08b35d7",
               "vastaus": "YMKY",
               "valittu": false,
               "oikea": false
             },
             {
+              "uid": "10a5d7-0c44-d5d7-aaef-dd8bdcd468ec",
               "vastaus": "NMKY",
               "valittu": false,
               "oikea": true
             },
             {
+              "uid": "85c04b3-8efb-f17e-58f8-7aa8b4808f6",
               "vastaus": "MNKY",
               "valittu": false,
               "oikea": false
@@ -28,19 +113,23 @@
           ]
         },
         {
+          "uid": "af808fc-020a-f4f-2b13-a0ea20c383a",
           "kysymys": "Mikä seuraavista on GIF?",
           "vastaukset": [
             {
+              "uid": "547ccbe-ffa-11ba-406f-f43c4283aed",
               "vastaus": "graph iteration format",
               "valittu": false,
               "oikea": false
             },
             {
+              "uid": "2eeb50e-4234-f1cc-336c-77cbc27ff78c",
               "vastaus": "graphics interchange format",
               "valittu": false,
               "oikea": true
             },
             {
+              "uid": "fc433b0-36b7-da5b-07e8-b5c7247b562",
               "vastaus": "george iliott format ",
               "valittu": false,
               "oikea": false
@@ -48,24 +137,29 @@
           ]
         },
         {
+          "uid": "d58dfee-e21-318c-2db0-f001eceabc14",
           "kysymys": "Kuka on oikea Ben?",
           "vastaukset": [
             {
+              "uid": "f0f8dca-8b2c-fa5e-e51f-7cfa8cdcaf2",
               "vastaus": "Ben Zysgowicz",
               "valittu": false,
               "oikea": false
             },
             {
+              "uid": "17a81b1-10db-ae53-685a-30e53c60616",
               "vastaus": "Ben Zyscowicz",
               "valittu": false,
               "oikea": true
             },
             {
+              "uid": "c1f4ae-84b-a0b7-2cc1-0530887512",
               "vastaus": "Ben Zyskowicz",
               "valittu": false,
               "oikea": false
             },
             {
+              "uid": "1e67e3-42f5-747d-d4ca-23566bf7cf38",
               "vastaus": "Ben Zysćowicz",
               "valittu": false,
               "oikea": false
@@ -75,27 +169,33 @@
       ]
     },
     {
+      "uid": "a20de07-c602-a882-7f36-247e1d86f6a",
       "nimi": "Merkkivisa",
       "kysely": [
         {
+          "uid": "07088b1-e7ac-bc4d-e71f-e31dd1286844",
           "kysymys": "Mikä seuraavista shakkipelin merkinnöistä tarkoittaa 'arveluttava siirto, mutta ei suoraan osoitettavissa virheeksi'?",
           "vastaukset": [
             {
+              "uid": "20071ad-04cb-fcf-335f-ab860c5ffac",
               "vastaus": "?",
               "valittu": false,
               "oikea": false
             },
             {
+              "uid": "684006-a4ff-1-0f-2302531bef0d",
               "vastaus": "??",
               "valittu": false,
               "oikea": false
             },
             {
+              "uid": "cf562c6-8d13-385b-1a3-4017840fd73",
               "vastaus": "?!",
               "valittu": false,
               "oikea": true
             },
             {
+              "uid": "62efcb-65fd-d665-3417-3a625e2205",
               "vastaus": "!?",
               "valittu": false,
               "oikea": false
@@ -103,19 +203,23 @@
           ]
         },
         {
+          "uid": "c105e67-67eb-d80b-4efb-0f15fc0752",
           "kysymys": "Mikä ‽ on englanninkieliseltä nimeltään?",
           "vastaukset": [
             {
+              "uid": "2d46ed6-a4d3-e7c3-25e-eeb322c56",
               "vastaus": "Interrobang",
               "valittu": false,
               "oikea": true
             },
             {
+              "uid": "0d4ceee-d626-ea2b-261-0e72d4fe605c",
               "vastaus": "Sulivabang",
               "valittu": false,
               "oikea": false
             },
             {
+              "uid": "03a73c-f1e6-e4b7-56f0-ec5bc76061a7",
               "vastaus": "Guessbang",
               "valittu": false,
               "oikea": false
@@ -123,24 +227,29 @@
           ]
         },
         {
+          "uid": "bf0e7-00b2-0ea3-eff-5033b4a435",
           "kysymys": "Mitä matemaattinen merkki ∂ tarkoittaa?",
           "vastaukset": [
             {
+              "uid": "17e3a31-a667-038a-8c0-b5ab833e05e",
               "vastaus": "Tyhjä joukko",
               "valittu": false,
               "oikea": false
             },
             {
+              "uid": "c0e18b-08d4-3e71-d0ed-0ad43c862",
               "vastaus": "Normaali aliryhmä",
               "valittu": false,
               "oikea": true
             },
             {
+              "uid": "ac1a357-31ab-d480-f018-ad8bed41aef",
               "vastaus": "Gradientti",
               "valittu": false,
               "oikea": false
             },
             {
+              "uid": "a1ed8-37bb-f4c3-3ae5-f34f762b27b2",
               "vastaus": "Osittaisderivaatta",
               "valittu": false,
               "oikea": false

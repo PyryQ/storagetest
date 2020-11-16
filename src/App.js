@@ -12,12 +12,14 @@ import uuid from 'react-uuid';
 import MuokkaaKysymyksiä from './MuokkaaKysymyksiä';
 import axios from 'axios';
 
-
+// Kehitettävää: aktiivisen tentin buttonille eri väri
+// Kysymyskomponentti?
+// Muuttujien nimien selkeytys
+// Kommentointia
+// Hookit, onBlur
+//tyhjää muisti - painike
 
 function App() {
-  require('react-dom');
-  window.React2 = require('react');
-  console.log(window.React1 === window.React2);
 
   const [data, setData]=useState([])
   const [data2, setData2]=useState([])//Serveriä varten
@@ -90,7 +92,8 @@ function App() {
       }
     ]
 
-  //data serverin datan muodostamista varten
+  //data serverin datan muodostamista/testaamista varten
+  //dataa käsitellään kuitenkin kyselyt1 listan kautta
   const kyselyt2 = 
     [{nimi: "Numerovisa testi", kysely: [
       {kysymys: "Kuinka monta ihmistä on käynyt kuussa?", vastaukset: [
@@ -191,6 +194,7 @@ function App() {
   useEffect(() => {
     const updateData = async () => {
       try{
+        //Nyt state päivitetään staten mukaan
         let result = await axios.put("http://localhost:3001/kyselyt", state)
       }
       catch(exception){
@@ -272,56 +276,81 @@ function App() {
 
   ///////////////////////////REDUCER
   function reducer(state, action) { //data tai state
-    console.log(state[0])
-    let syväKopio = JSON.parse(JSON.stringify(state)) //data vai state?
-    console.log(syväKopio[0])
+    //ReferenceError: Cannot access 'syväKopio' before initialization
+    //^^Mikäli syväkopiota kutsutaan caseissa
+    //Siksi toistaiseksi oma syväkopio kaikille caseille
+    let syväKopioR = JSON.parse(JSON.stringify(state)) //data vai state?
+    console.log(syväKopioR[tenttiValinta])
     switch (action.type) {
       case 'INIT_DATA':
         return action.data;
       case 'VASTAUS_VALITTU':
-        //syväKopio[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].valittu = action.data.valittuV
-        syväKopio[tenttiValinta].kysely[0].vastaukset[0].valittu = action.data.valittuV
-        return syväKopio
+        console.log(action.data.indexKy)
+        let syväKopioVV = JSON.parse(JSON.stringify(state))
+        syväKopioVV[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].valittu = action.data.valittuV
+        return syväKopioVV
       case 'MUUTA_VASTAUSTA':
-        //(event) => dispatch({type: "MUUTA_VASTAUSTA", data:{vastausT:event.target.value, indexK: index, indexV: index}})
-        
-        //syväKopio[tenttiValinta].kysely[action.data.IndexK].vastaukset[action.data.indexV].vastaus = action.data.vastaus
-        syväKopio[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].vastaus = action.data.value
-        return syväKopio
+        let syväKopioMV = JSON.parse(JSON.stringify(state))
+        syväKopioMV[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].vastaus = action.data.valittuV
+        return syväKopioMV
       case 'MUUTA_OIKEA_VASTAUS':
-        syväKopio[tenttiValinta].kysely[0].vastaukset[0].oikea = "event.target.checked"
-        return syväKopio
+        let syväKopioMOV = JSON.parse(JSON.stringify(state))
+        syväKopioMOV[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].oikea = action.data.valittuV
+        return syväKopioMOV
       case 'POISTA_VASTAUS':
-        syväKopio[tenttiValinta].kysely[0].vastaukset.splice(0, 1)
-        return syväKopio
+        let syväKopioPV = JSON.parse(JSON.stringify(state))
+        syväKopioPV[tenttiValinta].kysely[action.data.indexKy].vastaukset.splice(action.data.indexVa, 1)
+        return syväKopioPV
       case 'LISÄÄ_VASTAUS':
         let uusiVastaus = {vastaus: "", valittu: false, oikea: false}
-        syväKopio[tenttiValinta].kysely[0].vastaukset.push(uusiVastaus)
-        return syväKopio
+        let syväKopioLV = JSON.parse(JSON.stringify(state))
+        syväKopioLV[tenttiValinta].kysely[action.data.indexKy].vastaukset.push(uusiVastaus)
+        return syväKopioLV
       case 'MUOKKAA_KYSYMYSTÄ':
-        syväKopio[tenttiValinta].kysely[0].kysymys = "event.target.value"
-        return syväKopio
+        let syväKopioMK = JSON.parse(JSON.stringify(state))
+        syväKopioMK[tenttiValinta].kysely[action.data.indexKy].kysymys = action.data.valittuK
+        return syväKopioMK
       case 'LISÄÄ_KYSYMYS':
+        let syväKopioLK = JSON.parse(JSON.stringify(state))
         let uusiKysymys =  {kysymys: "", vastaukset: []}
-        syväKopio[tenttiValinta].kysely.push(uusiKysymys)
-        return syväKopio
+        syväKopioLK[tenttiValinta].kysely.push(uusiKysymys)
+        return syväKopioLK
       case 'POISTA_KYSYMYS':
-        syväKopio[tenttiValinta].kysely.splice(0, 1)
-        return syväKopio
+        let syväKopioPK = JSON.parse(JSON.stringify(state))
+        syväKopioPK[tenttiValinta].kysely.splice(0, 1)
+        return syväKopioPK
       case 'LISÄÄ_TENTTI':
         let tenttiNimi = prompt("Anna uudelle tentille nimi:", "");
-        let syväKopio = JSON.parse(JSON.stringify(data));
+        let syväKopioR = JSON.parse(JSON.stringify(data));
         let uusiKysely = {nimi: tenttiNimi, kysely: [
           {kysymys: "", vastaukset: [{vastaus: "", valittu: false, oikea: false}]}]
         }
-        syväKopio.push(uusiKysely)
-        return syväKopio
+        syväKopioR.push(uusiKysely)
+        return syväKopioR
         case 'LISÄÄ_TENTTI':
-          return syväKopio
+          return syväKopioR
       default:
         throw new Error();
     }
   }
+
+  ////////////////////////////Muiden hookkien muistiinpanoja - useMemo - useRef
+  //Dom puusta tietoa, useRef
+  //Toinen hook, useMemo, jottei renderöidä turhuuksia
+  //Laitetaan funktion vastaus muistiin, poimitaan vastausarvo
+  //<Kysymys> const Kysymys </Kysymys>
+  //const KysymysMemo = Read.memo(Kysymys)
+  //compare(previousProps, nextProps){
+  // a = previousProps.index == nextProps.index
+  // b = previousProps.teksti == nextProps.teksti
+  // return a&&b
+  //const KysymysMemo = React.memo(Kysymys, compare)
+  //useCallback, mikäli propseissa välitetään funktioita
+  //}
+  //onBlur, event, kun solusta poistutaan
+  //codepen reactMemo
+  //useRef, focuksen saamiseksi, esimerkiksi scroll-listan alimpaan elementtiin päästään käsiksi
+  //const refContainer = useRef(initialValue)
 
 
   //////////////////////////Funktiot listan muokkaamista varten
@@ -390,13 +419,8 @@ function App() {
     }
     settenttiValinta(0)
   }
-  console.log("data") 
-  console.log(data) 
-  console.log("serverin data") 
-  console.log(data2) 
   console.log("state") 
   console.log(state)
-  console.log(data2[tenttiValinta])
   return (
     <div>
       <div className={classes1.root}>
@@ -416,50 +440,50 @@ function App() {
 
       <div className="kysymysosio">
         {/*Painikkeet kyselyn valintaa varten*/}
-        {data.map((arvo, index) => <Button variant={"contained"} onClick={() => {settenttiValinta(index); setPalautettu(false); nowLoading();}}>{arvo.nimi}</Button>)}
+        {state.map((arvo, index) => <Button variant={"contained"} onClick={() => {settenttiValinta(index); setPalautettu(false); nowLoading();}}>{arvo.nimi}</Button>)}
         <br/>
         <br/>
-        {data[tenttiValinta] != undefined ? (
-        näkymä == 1 ? <div>
-          <Fade right><TulostaKysymykset1 
-            dispatch={dispatch}
-            muutaVastaus={vastausValittu} 
-            kysymys={data[tenttiValinta]} 
-            palautettu= {palautettu}
-            kyselyIndex= {tenttiValinta}>
-          </TulostaKysymykset1></Fade>
-        <br/>
-        <Button variant={"contained"} color="primary" onClick={() => {setPalautettu(true); nowLoading();}}>Näytä vastaukset</Button>
-        </div> : 
-          <Fade right><MuokkaaKysymyksiä 
-            dispatch={dispatch}
-            kysymys={data[tenttiValinta]} 
-            kyselyIndex={tenttiValinta}
-            muokkaaVastausta={muokkaaVastausta}
-            muutaOikeaVastaus={muutaOikeaVastaus}
-            muokkaaKysymystä={muokkaaKysymystä}
-            poistaVastaus={poistaVastaus}
-            poistaKysymys={poistaKysymys}
-            lisääVastaus={lisääVastaus}
-            lisääKysymys={lisääKysymys}
-            lisääUusiTentti={lisääUusiTentti}
-            poistaTentti={poistaTentti}>
-          </MuokkaaKysymyksiä></Fade>
-        ) : null
-        }
+        {state[tenttiValinta] != undefined ? (
+          näkymä == 1 ? <div>
+            <Fade right><TulostaKysymykset1 
+              dispatch={dispatch}
+              muutaVastaus={vastausValittu} 
+              kysymys={state[tenttiValinta]} 
+              palautettu= {palautettu}
+              kyselyIndex= {tenttiValinta}>
+            </TulostaKysymykset1></Fade>
+          <br/>
+          <Button variant={"contained"} color="primary" onClick={() => {setPalautettu(true); nowLoading();}}>Näytä vastaukset</Button>
+          </div> : 
+            <Fade right><MuokkaaKysymyksiä 
+              dispatch={dispatch}
+              kysymys={state[tenttiValinta]} 
+              kyselyIndex={tenttiValinta}
+              muokkaaVastausta={muokkaaVastausta}
+              muutaOikeaVastaus={muutaOikeaVastaus}
+              muokkaaKysymystä={muokkaaKysymystä}
+              poistaVastaus={poistaVastaus}
+              poistaKysymys={poistaKysymys}
+              lisääVastaus={lisääVastaus}
+              lisääKysymys={lisääKysymys}
+              lisääUusiTentti={lisääUusiTentti}
+              poistaTentti={poistaTentti}>
+            </MuokkaaKysymyksiä></Fade>
+          ) : null
+          }
 
-        
-        {/* <Fade right><TulostaKysymyksetUusi 
-            muutaVastaus={vastausValittu} 
-            vainKysymys={data} 
-            palautettu= {palautettu}
-            kyselyIndex= {tenttiValinta}>
-          </TulostaKysymyksetUusi></Fade> */}
-          <br></br>
-          <Button variant={"contained"} color="primary">Tyhjää muisti</Button>
-        </div>
-        
-    </div>
+          
+          {/* <Fade right><TulostaKysymyksetUusi 
+              muutaVastaus={vastausValittu} 
+              vainKysymys={data} 
+              palautettu= {palautettu}
+              kyselyIndex= {tenttiValinta}>
+            </TulostaKysymyksetUusi></Fade> */}
+            <br></br>
+            <Button variant={"contained"} color="primary">Tyhjää muisti</Button>
+          </div>
+          
+      </div>
   );
 }
 

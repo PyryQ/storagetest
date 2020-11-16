@@ -27,8 +27,8 @@ export default function TulostaKysymykset1(props) {
 
   const vastaustenTarkistus = (index) =>{
     try{
-      let pituus = dataT[props.kyselyIndex].dataT[props.kyselyIndex].kysely.length
-      let tarkistus = dataT[props.kyselyIndex].kysely[index].vastaukset
+      let pituus = dataT.kysely.length
+      let tarkistus = dataT.kysely[index].vastaukset
       console.log(tarkistus)
       for (var i = 0; i < pituus; i++){
         if (tarkistus[i].oikea !== tarkistus[i].valittu){
@@ -51,8 +51,8 @@ export default function TulostaKysymykset1(props) {
       return dataT.kysely[indexK].vastaukset.map((alkio, indexV) => 
       <div key={indexV}>
         <label><Checkbox disabled={palautettu === true} className="kysymys" key={alkio}
-        id={indexV} checked={alkio.valittu} 
-        onChange={(event) => props.dispatch({type: 'VASTAUS_VALITTU', data:{valittuV:event.target.checked, indexKy: indexK, indexVa: indexV}})}/>
+          id={indexV} checked={alkio.valittu} 
+          onChange={(e) => props.dispatch({type: 'VASTAUS_VALITTU', data:{valittuV:e.target.checked, indexKy: indexK, indexVa: indexV}})}/>
         {alkio.vastaus}</label>
 
       </div>)
@@ -68,10 +68,9 @@ export default function TulostaKysymykset1(props) {
         {alkio.vastaus}</label>
       </div>)
   }
-  console.log(dataT.kysely[0])
 
   return (dataT.kysely !== undefined ? (
-  <div className="tulostusosio">{console.log(dataT.kysely)}
+  <div className="tulostusosio">
       {dataT.kysely.map((item, index) => <Card className="kortti" elevation={3}><div className="kysymys">
       {item.kysymys}{props.palautettu ? vastaustenTarkistus(index) : null}</div> {näytäVaihtoehdot(index)}
       </Card>)}

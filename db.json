@@ -2,73 +2,7 @@
   "kyselyt": [
     {
       "nimi": "Numerovisa testi",
-      "kysely": [
-        {
-          "kysymys": "Kuinka monta ihmistä on käynyt kuussa?",
-          "vastaukset": [
-            {
-              "vastaus": "0",
-              "valittu": false,
-              "oikea": false
-            },
-            {
-              "vastaus": "12",
-              "valittu": false,
-              "oikea": true
-            },
-            {
-              "vastaus": "15",
-              "valittu": false,
-              "oikea": false
-            }
-          ]
-        },
-        {
-          "kysymys": "Kuinka monta sanaa Potter-kirjasarjan suomennoksissa on yhteensä?",
-          "vastaukset": [
-            {
-              "vastaus": "857 911",
-              "valittu": false,
-              "oikea": true
-            },
-            {
-              "vastaus": "955 543",
-              "valittu": false,
-              "oikea": false
-            },
-            {
-              "vastaus": "1 100 438",
-              "valittu": false,
-              "oikea": false
-            },
-            {
-              "vastaus": "1 204 539",
-              "valittu": false,
-              "oikea": false
-            }
-          ]
-        },
-        {
-          "kysymys": "Mikä seuraavista luvuista on lähinnä Tanskan asukasmäärää?",
-          "vastaukset": [
-            {
-              "vastaus": "5,2 miljoonaa",
-              "valittu": false,
-              "oikea": false
-            },
-            {
-              "vastaus": "5,6 miljoonaa",
-              "valittu": false,
-              "oikea": false
-            },
-            {
-              "vastaus": "5,8 miljoonaa",
-              "valittu": false,
-              "oikea": true
-            }
-          ]
-        }
-      ]
+      "kysely": []
     },
     {
       "nimi": "Kirjainvisa",

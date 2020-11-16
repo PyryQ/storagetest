@@ -36,6 +36,10 @@
   position: center;
 }
 
+.tenttiValinta:focus{
+  outline: #4CAF50 solid 2px;
+}
+
 
 
 

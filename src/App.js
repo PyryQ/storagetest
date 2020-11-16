@@ -1,24 +1,25 @@
 import React from 'react';
 import Fade from 'react-reveal/Fade';
-import {useEffect, useState, useReducer, initialState} from 'react';
+import {useEffect, useState, useReducer} from 'react';
 import './App.css';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import TulostaKysymykset1 from './TulostaKysymykset1';
-import TulostaKysymyksetUusi from './TulostaKysymyksetUusi';
 import uuid from 'react-uuid';
 import MuokkaaKysymyksiä from './MuokkaaKysymyksiä';
-import axios from 'axios';
+import axios from 'axios'; //serverin käyttöä varten
+import TulostaKysymyksetUusi from './TulostaKysymyksetUusi'; //aiempi testauskopio
 
 // Kehitettävää: aktiivisen tentin buttonille eri väri
 // Kysymyskomponentti?
+// reducer omaan tiedostoon?
 // Muuttujien nimien selkeytys
 // Kommentointia
 // Hookit, onBlur
 // tyhjää muisti - painike
-// Tentin lisäys
+// Tentin lisäys (propmtti pois reducerista)
 
 function App() {
 
@@ -92,7 +93,7 @@ function App() {
     ]
 
   //data serverin datan muodostamista/testaamista varten
-  //dataa käsitellään kuitenkin kyselyt1 listan kautta
+  //dataa käsitellään kuitenkin kyselyt listan kautta
   const kyselyt2 = 
     [{uid: uuid(), nimi: "Numerovisa testi", kysely: [
       {uid: uuid(), kysymys: "Kuinka monta ihmistä on käynyt kuussa?", vastaukset: [
@@ -154,9 +155,9 @@ function App() {
     }
   ]
 
+  // Alustetaan state kyselyn avulla
   const [state, dispatch] = useReducer(reducer, kyselyt);
           
-
   // useEffect(()=>{
   //   ////////////////////////////POST
   //   const createData = async () => {
@@ -207,7 +208,6 @@ function App() {
   //   }
   // },[state])
     
- 
 
   // localSotragen data-avaimena on "data"
   useEffect(() => {
@@ -222,7 +222,7 @@ function App() {
   },[])
 
 
-  // Datan alustuksen tarkistus
+  // Staten alustuksen tarkistus
   useEffect(() => {
     if (dataAlustettu) {
       window.localStorage.setItem("data", JSON.stringify(state))
@@ -256,8 +256,46 @@ function App() {
       flexGrow: 1,
     }
   }));
-
   const classes1 = useStyles();
+
+
+  //Valmis painike fokuksen testaamiseksi
+  const BootstrapButton = withStyles({
+    root: {
+      boxShadow: 'none',
+      textTransform: 'none',
+      fontSize: 16,
+      padding: '6px 12px',
+      border: '1px solid',
+      lineHeight: 1.5,
+      backgroundColor: '#0063cc',
+      borderColor: '#0063cc',
+      fontFamily: [
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+      ].join(','),
+      '&:hover': {
+        backgroundColor: '#0069d9',
+        borderColor: '#0062cc',
+        boxShadow: 'none',
+      },
+      '&:active': {
+        boxShadow: 'none',
+        backgroundColor: '#0062cc',
+        borderColor: '#005cbf',
+      },
+      '&:focus': {
+        boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
+      } 
+    },
+  })(Button);
+  const classesButton = useStyles();
 
   
   ////////////Latausnäkymätestailua
@@ -280,12 +318,10 @@ function App() {
     //^^Mikäli syväkopiota kutsutaan caseissa
     //Siksi toistaiseksi oma syväkopio kaikille caseille
     let syväKopioR = JSON.parse(JSON.stringify(state)) //data vai state?
-    console.log(syväKopioR[tenttiValinta])
     switch (action.type) {
       case 'INIT_DATA':
         return action.data;
       case 'VASTAUS_VALITTU':
-        console.log(action.data.indexKy)
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].valittu = action.data.valittuV
         return syväKopioR
       case 'MUUTA_VASTAUSTA':
@@ -305,16 +341,21 @@ function App() {
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].kysymys = action.data.valittuK
         return syväKopioR
       case 'LISÄÄ_KYSYMYS':
-        let uusiKysymys =  {kysymys: "", vastaukset: []}
+        let uusiKysymys =  {uid: uuid(), kysymys: "", vastaukset: []}
         syväKopioR[tenttiValinta].kysely.push(uusiKysymys)
         return syväKopioR
       case 'POISTA_KYSYMYS':
         syväKopioR[tenttiValinta].kysely.splice(action.data.indexKy, 1)
         return syväKopioR
+      case 'MUOKKAA_TENTTI':
+        syväKopioR[tenttiValinta].nimi = action.data.tentinNimi
+        return syväKopioR
       case 'LISÄÄ_TENTTI':
-        let tenttiNimi = prompt("Anna uudelle tentille nimi:", "");
-        let uusiTentti = {nimi: tenttiNimi, kysely: [
-          {kysymys: "", vastaukset: [{vastaus: "", valittu: false, oikea: false}]}]
+        //https://github.com/facebook/react/issues/16295
+        let tenttiNimi = "Uusi tentti"
+        //prompt("Anna uudelle tentille nimi:", "");
+        let uusiTentti = {uid: uuid(), nimi: tenttiNimi, kysely: [
+          {uid: uuid(), kysymys: "", vastaukset: [{vastaus: "", valittu: false, oikea: false}]}]
         }
         syväKopioR.push(uusiTentti)
         return syväKopioR
@@ -348,77 +389,6 @@ function App() {
   //useRef, focuksen saamiseksi, esimerkiksi scroll-listan alimpaan elementtiin päästään käsiksi
   //const refContainer = useRef(initialValue)
 
-
-  //////////////////////////Funktiot listan muokkaamista varten, toteutettu reducerilla
-  // const muokkaaVastausta = (event, kysymysI, vastausI) => {
-  //   let syväKopio = JSON.parse(JSON.stringify(data))
-  //   syväKopio[tenttiValinta].kysely[kysymysI].vastaukset[vastausI].vastaus = event.target.value
-  //   setData(syväKopio)
-  // }
-
-  // const muutaOikeaVastaus = (event, kysymysI, vastausI) => {
-  //   let syväKopio = JSON.parse(JSON.stringify(data))
-  //   syväKopio[tenttiValinta].kysely[kysymysI].vastaukset[vastausI].oikea = event.target.checked
-  //   setData(syväKopio)
-  // }
-
-  // const poistaVastaus = (kysymysI, vastausI) => {
-  //   let syväKopio = JSON.parse(JSON.stringify(data))
-  //   syväKopio[tenttiValinta].kysely[kysymysI].vastaukset.splice(vastausI, 1)
-  //   setData(syväKopio)
-  // }
-
-  // const lisääVastaus = (kysymysI) => {
-  //   let syväKopio = JSON.parse(JSON.stringify(data))
-  //   let uusiVastaus = {vastaus: "", valittu: false, oikea: false}
-  //   syväKopio[tenttiValinta].kysely[kysymysI].vastaukset.push(uusiVastaus)
-  //   setData(syväKopio)
-  // }
-
-  // const muokkaaKysymystä = (event, kysymysI) => {
-  //   let syväKopio = JSON.parse(JSON.stringify(data))
-  //   syväKopio[tenttiValinta].kysely[kysymysI].kysymys = event.target.value
-  //   setData(syväKopio)
-  // }
-
-  // const lisääKysymys = () => {
-  //   let syväKopio = JSON.parse(JSON.stringify(data))
-  //   let uusiKysymys =  {kysymys: "", vastaukset: []}
-  //   syväKopio[tenttiValinta].kysely.push(uusiKysymys)
-  //   setData(syväKopio)
-  // }
-
-  // const poistaKysymys = (kysymysI) => {
-  //   let syväKopio = JSON.parse(JSON.stringify(data))
-  //   syväKopio[tenttiValinta].kysely.splice(kysymysI, 1)
-  //   setData(syväKopio)
-  // }
-
-  // const lisääUusiTentti = () => {
-  //   let tenttiNimi = prompt("Anna uudelle tentille nimi:", "");
-  //   let syväKopio = JSON.parse(JSON.stringify(data))
-  //   let uusiKysely = {nimi: tenttiNimi, kysely: [
-  //     {kysymys: "", vastaukset: [{vastaus: "", valittu: false, oikea: false}]}]
-  //   }
-  //   syväKopio.push(uusiKysely)
-  //   setData(syväKopio)
-  // }
-
-  // const poistaTentti = () => {
-  //   let syväKopio = JSON.parse(JSON.stringify(data))
-  //   if(data.length > 1){
-  //     syväKopio.splice(tenttiValinta, 1)
-  //   setData(syväKopio)
-  //   }
-  //   else {
-  //     alert("Tenttejä on oltava vähintään yksi.")
-  //   }
-  //   settenttiValinta(0)
-  // }
-
-
-  console.log("state") 
-  console.log(state)
   return (
     <div>
       <div className={classes1.root}>
@@ -438,8 +408,12 @@ function App() {
 
       <div className="kysymysosio">
         {/*Painikkeet kyselyn valintaa varten*/}
-        {state.map((arvo, index) => <Button className="tenttiValinta" variant={"contained"} onClick={() => {settenttiValinta(index); setPalautettu(false); nowLoading();}}>{arvo.nimi}</Button>)}
+        {state.map((arvo, index) => <BootstrapButton variant="contained" color="primary" 
+          disableRipple className={classesButton.margin} 
+          onClick={() => {settenttiValinta(index); setPalautettu(false);}}>{arvo.nimi}
+        </BootstrapButton>) }
         <br/>
+        
         <br/>
         {state[tenttiValinta] != undefined ? (
           näkymä == 1 ? <div>

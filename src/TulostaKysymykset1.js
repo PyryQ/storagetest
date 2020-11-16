@@ -21,8 +21,6 @@ export default function TulostaKysymykset1(props) {
 
   //Alustetaan kysymysten tulostusta varten dataT
   let dataT = props.kysymys
-  console.log(dataT)
-
   let palautettu = props.palautettu;
 
   const vastaustenTarkistus = (index) =>{
@@ -73,7 +71,7 @@ export default function TulostaKysymykset1(props) {
   return (dataT.kysely !== undefined ? (
   <div className="tulostusosio">
       {dataT.kysely.map((item, index) => <Card className="kortti" elevation={3}><div className="kysymys">
-      {item.kysymys}{props.palautettu ? vastaustenTarkistus(index) : null}</div> {näytäVaihtoehdot(index)}
+      {item.kysymys}{palautettu ? vastaustenTarkistus(index) : null}</div> {näytäVaihtoehdot(index)}
       </Card>)}
     </div>) : null
   );

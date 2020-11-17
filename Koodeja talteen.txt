@@ -113,4 +113,19 @@
       ]
     }
   ]
+
+
+
+
+  ////////////Latausnäkymätestailua
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 500)
+  }, [])
+
+  const nowLoading = () => {
+    setLoading(true)
+    setTimeout(() => setLoading(false), 500)
+  }
     

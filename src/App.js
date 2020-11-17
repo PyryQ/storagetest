@@ -1,36 +1,39 @@
 import React from 'react';
-import Fade from 'react-reveal/Fade';
 import {useEffect, useState, useReducer} from 'react';
-import './App.css';
+import Fade from 'react-reveal/Fade';
+import uuid from 'react-uuid';
+import axios from 'axios'; //serverin käyttöä varten
+//Muotoilua
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import TulostaKysymykset1 from './TulostaKysymykset1';
-import uuid from 'react-uuid';
+//Muut komponentit js css
+import './App.css';
+import TulostaKysymykset from './TulostaKysymykset';
 import MuokkaaKysymyksiä from './MuokkaaKysymyksiä';
-import axios from 'axios'; //serverin käyttöä varten
 import TulostaKysymyksetUusi from './TulostaKysymyksetUusi'; //aiempi testauskopio
 
-// Kehitettävää: aktiivisen tentin buttonille eri väri
+// Kehitettävää: 
+//aktiivisen tentin buttonille eri väri
 // Kysymyskomponentti?
 // reducer omaan tiedostoon?
 // Muuttujien nimien selkeytys
 // Kommentointia
-// Hookit, onBlur
-// tyhjää muisti - painike
-// Tentin lisäys (propmtti pois reducerista)
+// Hookit, onBlur?
+// tekstittömän painikkeen muotoilu
+
 
 function App() {
 
-  const [data, setData]=useState([])
-  const [data2, setData2]=useState([])//Serveriä varten
-  const [dataAlustettu, setDataAlustettu] = useState(false)
-  const [dataAlustettu2, setDataAlustettu2] = useState(false)//Serveriä varten
+  const [data1, setData]=useState([]) //Käytettiin datan käsittelyssä ennen statea
+  const [data2, setData2]=useState([]) //Serveriä varten
+  const [dataAlustettu, setDataAlustettu] = useState(false) //Onko data alustettu
+  const [dataAlustettu2, setDataAlustettu2] = useState(false) //Serveriä varten
 
-  const [palautettu, setPalautettu] = useState(false)
-  const [tenttiValinta, settenttiValinta] = useState(0)
-  const [näkymä, setNäkymä] = useState(1)
+  const [palautettu, setPalautettu] = useState(false) //Onko kysely palautettu
+  const [tenttiValinta, settenttiValinta] = useState(0) //Mikä tenteistä on valittu
+  const [näkymä, setNäkymä] = useState(1) //Vastaus- vai muokkausnäkymä
 
   //Alkuperäinen taulukko kyselyistä ja niiden vastauksista
   const kyselyt = [
@@ -93,8 +96,8 @@ function App() {
     ]
 
   //data serverin datan muodostamista/testaamista varten
-  //dataa käsitellään kuitenkin kyselyt listan kautta
-  const kyselyt2 = 
+  //dataa käsitellään kuitenkinkyselyt listan pohjalta staten avulla
+  const kyselytServeri = 
     [{uid: uuid(), nimi: "Numerovisa testi", kysely: [
       {uid: uuid(), kysymys: "Kuinka monta ihmistä on käynyt kuussa?", vastaukset: [
         {uid: uuid(), vastaus: "0", valittu: false, oikea: false}, 
@@ -155,61 +158,61 @@ function App() {
     }
   ]
 
-  // Alustetaan state kyselyn avulla
+  // Alustetaan state ja reducer kyselyn avulla
   const [state, dispatch] = useReducer(reducer, kyselyt);
-          
-  // useEffect(()=>{
-  //   ////////////////////////////POST
-  //   const createData = async () => {
-  //     try{
-  //       let result = await axios.post("http://localhost:3001/kyselyt", kyselyt2)
-  //       dispatch({type: "INIT_DATA", data: kyselyt2})
-  //       setData2(kyselyt2)
-  //       setDataAlustettu2(true)
-  //     }
-  //     catch(exception){
-  //       alert("Tietokannan alustaminen epäonnistui (Post)")
-  //     }
-  //   }
-  //   /////////////////////////////GET
-  //   const fetchData = async () => {
-  //     try{
-  //       let result = await axios.get("http://localhost:3001/kyselyt")
-  //       if (result.data.lenght > 0){
-  //         dispatch({type: "INIT_DATA", data: result.data})
-  //         setData2(result.data);
-  //         setDataAlustettu2(true)
-  //       }else{
-  //         throw("Tietokannan alustaminen epäonnistui (Get)") 
-  //       }
-  //     }
-  //     catch(exception){
-  //       createData();
-  //       console.log(exception)
-  //     }
-  //   }
-  //   fetchData();
-  // },[])
+        
+  
+  //Post, get ja put serverin datan testaamista varten. Ei käytössä ohjelmassa.
+  useEffect(()=>{
+    ////////////////////////////POST
+    const createData = async () => {
+      try{
+        let result = await axios.post("http://localhost:3001/kyselyt", kyselytServeri)
+        dispatch({type: "INIT_DATA", data: kyselytServeri})
+        setData2(kyselytServeri)
+        setDataAlustettu2(true)
+      }
+      catch(exception){
+        alert("Tietokannan alustaminen epäonnistui (Post)")
+      }
+    }
+    /////////////////////////////GET
+    const fetchData = async () => {
+      try{
+        let result = await axios.get("http://localhost:3001/kyselyt")
+        if (result.data.lenght > 0){
+          dispatch({type: "INIT_DATA", data: result.data})
+          setData2(result.data);
+          setDataAlustettu2(true)
+        }else{
+          throw("Tietokannan alustaminen epäonnistui (Get)") 
+        }
+      }
+      catch(exception){
+        createData();
+        console.log(exception)
+      }
+    }
+    fetchData();
+  },[])
 
-  ////////////////////////////////PUT
-  // useEffect(() => {
-  //   const updateData = async () => {
-  //     try{
-  //       //Nyt state päivitetään staten mukaan
-  //       //setData(state)
-  //       let result = await axios.put("http://localhost:3001/kyselyt", state)
-  //     }
-  //     catch(exception){
-  //       console.log("Dataa ei onnistuttu päivittämään.")
-  //     }
-  //   }
-  //   if(dataAlustettu){
-  //     updateData();
-  //   }
-  // },[state])
+  //////////////////////////////PUT
+  useEffect(() => {
+    const updateData = async () => {
+      try{
+        let result = await axios.put("http://localhost:3001/kyselyt", state)
+      }
+      catch(exception){
+        console.log("Dataa ei onnistuttu päivittämään.")
+      }
+    }
+    if(dataAlustettu){
+      updateData();
+    }
+  },[state])
     
 
-  // localSotragen data-avaimena on "data"
+  // localStoragen data-avaimena on "data", joka alustetaan tässä
   useEffect(() => {
     let jemma = window.localStorage;
     let tempData = JSON.parse(jemma.getItem("data"))
@@ -222,25 +225,15 @@ function App() {
   },[])
 
 
-  // Staten alustuksen tarkistus
+  // Päivitetään localStorage staten mukaan
   useEffect(() => {
     if (dataAlustettu) {
       window.localStorage.setItem("data", JSON.stringify(state))
     }
   }, [state])
 
-  //Asetetaan valitun checkboxin tilan (event) mukaan käyttäjän vastaus indeksien avulla
-  const vastausValittu = (event, kysymysI, vastausI) => {
-    try{
-    let syväKopio = JSON.parse(JSON.stringify(data))
-    syväKopio[tenttiValinta].kysely[kysymysI].vastaukset[vastausI].valittu = event.target.checked
-    setData(syväKopio)
-    return null;
-    }catch{
-      alert("Vastausta ei onnistuttu valitsemaan.")
-    }
-  }
 
+  ////////////////////////////////MUOTOILUA
   //useStyles yläpalkin muotoilua varten
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -258,7 +251,6 @@ function App() {
   }));
   const classes1 = useStyles();
 
-
   //Valmis painike fokuksen testaamiseksi
   const BootstrapButton = withStyles({
     root: {
@@ -268,25 +260,12 @@ function App() {
       padding: '6px 12px',
       border: '1px solid',
       lineHeight: 1.5,
-      backgroundColor: '#0063cc',
-      borderColor: '#0063cc',
-      fontFamily: [
-        '"Segoe UI"',
-        'Roboto',
-        '"Helvetica Neue"',
-        'Arial',
-        'sans-serif',
-        '"Apple Color Emoji"',
-        '"Segoe UI Emoji"',
-        '"Segoe UI Symbol"',
-      ].join(','),
+      backgroundColor: '#3f51b5',
       '&:hover': {
         backgroundColor: '#0069d9',
         borderColor: '#0062cc',
-        boxShadow: 'none',
       },
       '&:active': {
-        boxShadow: 'none',
         backgroundColor: '#0062cc',
         borderColor: '#005cbf',
       },
@@ -296,20 +275,6 @@ function App() {
     },
   })(Button);
   const classesButton = useStyles();
-
-  
-  ////////////Latausnäkymätestailua
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 500)
-  }, [])
-
-  const nowLoading = () => {
-    setLoading(true)
-    setTimeout(() => setLoading(false), 500)
-  }
-
 
   ///////////////////////////REDUCER
   
@@ -330,12 +295,12 @@ function App() {
       case 'MUUTA_OIKEA_VASTAUS':
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].oikea = action.data.valittuV
         return syväKopioR
+      case 'LISÄÄ_VASTAUS':
+        let uusiVastaus = {uid: uuid(), vastaus: "", valittu: false, oikea: false}
+        syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset.push(uusiVastaus)
+        return syväKopioR
       case 'POISTA_VASTAUS':
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset.splice(action.data.indexVa, 1)
-        return syväKopioR
-      case 'LISÄÄ_VASTAUS':
-        let uusiVastaus = {vastaus: "", valittu: false, oikea: false}
-        syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset.push(uusiVastaus)
         return syväKopioR
       case 'MUOKKAA_KYSYMYSTÄ':
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].kysymys = action.data.valittuK
@@ -351,11 +316,8 @@ function App() {
         syväKopioR[tenttiValinta].nimi = action.data.tentinNimi
         return syväKopioR
       case 'LISÄÄ_TENTTI':
-        //https://github.com/facebook/react/issues/16295
-        let tenttiNimi = "Uusi tentti"
-        //prompt("Anna uudelle tentille nimi:", "");
-        let uusiTentti = {uid: uuid(), nimi: tenttiNimi, kysely: [
-          {uid: uuid(), kysymys: "", vastaukset: [{vastaus: "", valittu: false, oikea: false}]}]
+        let uusiTentti = {uid: uuid(), nimi: "Uusi tentti", kysely: [{
+          uid: uuid(), kysymys: "", vastaukset: [{vastaus: "", valittu: false, oikea: false}]}]
         }
         syväKopioR.push(uusiTentti)
         return syväKopioR
@@ -389,22 +351,35 @@ function App() {
   //useRef, focuksen saamiseksi, esimerkiksi scroll-listan alimpaan elementtiin päästään käsiksi
   //const refContainer = useRef(initialValue)
 
+
+   //useMemo-hahmottelua
+  //https://www.digitalocean.com/community/tutorials/react-usememo
+  //https://www.robinwieruch.de/react-usememo-hook
+  // const KysymysMemo = React.memo(Kysymys, vertaa) => {
+  //
+  //}
+  // vertaa(previousProps, nextProps){
+  //   a = previousProps.index == nextProps.index
+  //   b = previousProps.teksti == nextProps.teksti
+  //   return a&&b
+  // }
+
   return (
     <div>
+      {/*Yläpalkki navigointipainikkeineen*/}
       <div className={classes1.root}>
-      <AppBar position="static">
-        <Toolbar>
-          <Button color="inherit" edge="start" className={classes1.menuButton}>TENTIT</Button>
-          <Button color="inherit">TIETOA SOVELLUKSESTA</Button>
-          <Button variant="contained" color="secondary" onClick={() => setNäkymä(1)}>Näytä kysely</Button>
-          <Button variant="contained" color="secondary" onClick={() => setNäkymä(2)}>Näytä kyselyn muokkaus</Button>
-          <div className={classes1.spacer}></div>
-          <Button color="inherit">POISTU</Button>
-        </Toolbar>
+        <AppBar position="static">
+          <Toolbar>
+            <Button color="inherit" edge="start" className={classes1.menuButton}>TENTIT</Button>
+            <Button color="inherit">TIETOA SOVELLUKSESTA</Button>
+            <Button variant="contained" color="secondary" onClick={() => setNäkymä(1)}>Näytä kysely</Button>
+            <Button variant="contained" color="secondary" onClick={() => setNäkymä(2)}>Näytä kyselyn muokkaus</Button>
+            <div className={classes1.spacer}></div>
+            <Button color="inherit">POISTU</Button>
+          </Toolbar>
       </AppBar>
       </div>
       <br></br>
-
 
       <div className="kysymysosio">
         {/*Painikkeet kyselyn valintaa varten*/}
@@ -412,38 +387,27 @@ function App() {
           disableRipple className={classesButton.margin} 
           onClick={() => {settenttiValinta(index); setPalautettu(false);}}>{arvo.nimi}
         </BootstrapButton>) }
-        <br/>
+        <br/><br/>
         
-        <br/>
+        {/*Tarkistetaan, ettei state ole undefined*/}
         {state[tenttiValinta] != undefined ? (
-          näkymä == 1 ? <div>
-            <Fade right><TulostaKysymykset1 
+          näkymä == 1 ? <div> {/*Näkymän mukaan tulostetaan*/}
+            <Fade right><TulostaKysymykset
               dispatch={dispatch}
-              muutaVastaus={vastausValittu} 
               kysymys={state[tenttiValinta]} 
-              palautettu= {palautettu}>
-            </TulostaKysymykset1></Fade>
-          <br/>
-          <Button variant={"contained"} color="primary" onClick={() => {setPalautettu(true); nowLoading();}}>Näytä vastaukset</Button>
-          </div> : 
+              palautettu= {palautettu}/>
+            </Fade>
+            <br/>
+            <Button variant={"contained"} color="primary" onClick={() => {setPalautettu(true);}}>Näytä vastaukset</Button>
+            </div> : 
             <Fade right><MuokkaaKysymyksiä 
               dispatch={dispatch}
-              kysymys={state[tenttiValinta]}>
-            </MuokkaaKysymyksiä></Fade>
-          ) : null
-          }
-
-          
-          {/* <Fade right><TulostaKysymyksetUusi 
-              muutaVastaus={vastausValittu} 
-              vainKysymys={data} 
-              palautettu= {palautettu}
-              kyselyIndex= {tenttiValinta}>
-            </TulostaKysymyksetUusi></Fade> */}
-            <br></br>
-            <Button variant={"contained"} color="primary">Tyhjää muisti</Button>
-          </div>
-          
+              kysymys={state[tenttiValinta]}/>
+            </Fade>
+        ) : null }
+        <br></br>
+        <Button variant={"contained"} color="primary">Tyhjää muisti</Button>
+        </div>
       </div>
   );
 }

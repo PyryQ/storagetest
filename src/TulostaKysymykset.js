@@ -17,7 +17,7 @@ const GreenCheckbox = withStyles({
   checked: {},
 })((props) => <Checkbox color="default" {...props} />);
 
-export default function TulostaKysymykset1(props) {
+export default function TulostaKysymykset(props) {
 
   //Alustetaan kysymysten tulostusta varten dataT
   let dataT = props.kysymys

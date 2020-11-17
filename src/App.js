@@ -234,6 +234,7 @@ function App() {
 
 
   ////////////////////////////////MUOTOILUA
+
   //useStyles yläpalkin muotoilua varten
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -350,19 +351,6 @@ function App() {
   //codepen reactMemo
   //useRef, focuksen saamiseksi, esimerkiksi scroll-listan alimpaan elementtiin päästään käsiksi
   //const refContainer = useRef(initialValue)
-
-
-   //useMemo-hahmottelua
-  //https://www.digitalocean.com/community/tutorials/react-usememo
-  //https://www.robinwieruch.de/react-usememo-hook
-  // const KysymysMemo = React.memo(Kysymys, vertaa) => {
-  //
-  //}
-  // vertaa(previousProps, nextProps){
-  //   a = previousProps.index == nextProps.index
-  //   b = previousProps.teksti == nextProps.teksti
-  //   return a&&b
-  // }
 
   return (
     <div>

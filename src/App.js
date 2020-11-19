@@ -15,7 +15,7 @@ import MuokkaaKysymyksiä from './MuokkaaKysymyksiä';
 import TulostaKysymyksetUusi from './TulostaKysymyksetUusi'; //aiempi testauskopio
 import Kaavio2 from './Kaavio2';
 import Kaavio from './Kaavio';
-
+import KaavioVaaka from './KaavioVaaka';
 // Kehitettävää: 
 //aktiivisen tentin buttonille eri väri
 // Kysymyskomponentti?
@@ -399,6 +399,7 @@ function App() {
         <br></br>
         <Kaavio2></Kaavio2>
         <Kaavio></Kaavio>
+        <KaavioVaaka></KaavioVaaka>
         <Button variant={"contained"} color="primary">Tyhjää muisti</Button>
         </div>
       </div>

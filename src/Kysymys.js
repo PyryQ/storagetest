@@ -22,7 +22,7 @@ const GreenCheckbox = withStyles({
   }
 
 
-export function Kysymys(props) { //Kysymyksen index
+export default function Kysymys(props) { //Kysymyksen index
     let indexK = props.indexK
     let itemV = props.itemV
     let indexV = props.indexV
@@ -31,7 +31,7 @@ export function Kysymys(props) { //Kysymyksen index
     //Mikäli tuloksia ei ole palautettu, tulostetaan vain yksi checkbox
     if (palautettu === false){
       return <label>
-        <Checkbox disabled={palautettu === true} className="kysymys" key={itemV}
+        <Checkbox className="kysymys" key={itemV.uid}
           id={indexV} checked={itemV.valittu} 
           onChange={(e) => props.dispatch({type: 'VASTAUS_VALITTU', data:{valittuV:e.target.checked, indexKy: indexK, indexVa: indexV}})}/>
         {itemV.vastaus}</label>
@@ -46,8 +46,5 @@ export function Kysymys(props) { //Kysymyksen index
         {itemV.vastaus}</label>
 }
 
-
-
-export default Kysymys;
 
   

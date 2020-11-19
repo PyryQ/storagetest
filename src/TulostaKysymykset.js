@@ -72,15 +72,15 @@ export default function TulostaKysymykset(props) {
     if (palautettu === false){
       return dataT.kysely[indexK].vastaukset.map((itemV, indexV) => 
       <div key={itemV.uid}>
-        <KysymysMemo indexK={indexK} 
+        {/*<KysymysMemo indexK={indexK} 
         indexV={indexV} 
         itemV={itemV} 
         palautettu={palautettu}
-        dispatch={props.dispatch}/>
-        {/*<label><Checkbox disabled={palautettu === true} className="kysymys" key={itemV}
+        dispatch={props.dispatch}/>*/}
+        <label><Checkbox disabled={palautettu === true} className="kysymys" key={itemV}
           id={indexV} checked={itemV.valittu} 
           onChange={(e) => props.dispatch({type: 'VASTAUS_VALITTU', data:{valittuV:e.target.checked, indexKy: indexK, indexVa: indexV}})}/>
-          {itemV.vastaus}</label>*/}
+          {itemV.vastaus}</label>
 
       </div>)
     }

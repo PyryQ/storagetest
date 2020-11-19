@@ -128,4 +128,7 @@
     setLoading(true)
     setTimeout(() => setLoading(false), 500)
   }
+
+//ER-malli, assosiatiivinen taulu, tietokantasuunnitelma, segvenssikaava, relaatiomalli
+//dbdiagram.io
     

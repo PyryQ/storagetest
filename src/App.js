@@ -13,6 +13,8 @@ import './App.css';
 import TulostaKysymykset from './TulostaKysymykset';
 import MuokkaaKysymyksiä from './MuokkaaKysymyksiä';
 import TulostaKysymyksetUusi from './TulostaKysymyksetUusi'; //aiempi testauskopio
+import Kaavio2 from './Kaavio2';
+import Kaavio from './Kaavio';
 
 // Kehitettävää: 
 //aktiivisen tentin buttonille eri väri
@@ -362,6 +364,7 @@ function App() {
             <Button color="inherit">TIETOA SOVELLUKSESTA</Button>
             <Button variant="contained" color="secondary" onClick={() => setNäkymä(1)}>Näytä kysely</Button>
             <Button variant="contained" color="secondary" onClick={() => setNäkymä(2)}>Näytä kyselyn muokkaus</Button>
+            <Button variant="contained" color="secondary" onClick={() => setNäkymä(3)}>Tulosdemo</Button>
             <div className={classes1.spacer}></div>
             <Button color="inherit">POISTU</Button>
           </Toolbar>
@@ -394,6 +397,8 @@ function App() {
             </Fade>
         ) : null }
         <br></br>
+        <Kaavio2></Kaavio2>
+        <Kaavio></Kaavio>
         <Button variant={"contained"} color="primary">Tyhjää muisti</Button>
         </div>
       </div>

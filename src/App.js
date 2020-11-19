@@ -381,7 +381,7 @@ function App() {
         <br/><br/>
         
         {/*Tarkistetaan, ettei state ole undefined*/}
-        {state[tenttiValinta] != undefined ? (
+        {state[tenttiValinta] != undefined ? 
           näkymä == 1 ? <div> {/*Näkymän mukaan tulostetaan*/}
             <Fade right><TulostaKysymykset
               dispatch={dispatch}
@@ -391,15 +391,17 @@ function App() {
             <br/>
             <Button variant={"contained"} color="primary" onClick={() => {setPalautettu(true);}}>Näytä vastaukset</Button>
             </div> : 
-            <Fade right><MuokkaaKysymyksiä 
-              dispatch={dispatch}
-              kysymys={state[tenttiValinta]}/>
-            </Fade>
-        ) : null }
+            näkymä == 2 ?
+              <Fade right><MuokkaaKysymyksiä 
+                dispatch={dispatch}
+                kysymys={state[tenttiValinta]}/>
+              </Fade> : <div>
+                <Kaavio2></Kaavio2>
+                <Kaavio></Kaavio>
+                <KaavioVaaka></KaavioVaaka>
+              </div>
+         : null }
         <br></br>
-        <Kaavio2></Kaavio2>
-        <Kaavio></Kaavio>
-        <KaavioVaaka></KaavioVaaka>
         <Button variant={"contained"} color="primary">Tyhjää muisti</Button>
         </div>
       </div>
